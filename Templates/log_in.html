@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<body class="align">
+  <div class="grid">
+
+    <div id="login">
+
+      <h2><span class="fontawesome-lock"></span>Sign In</h2>
+
+      <form action="#" method="POST">
+         {% csrf_token %}
+        <fieldset>
+
+          <p><label for="username">Username</label></p>
+          <p><input type="text" name="username" placeholder="Username"></p>
+
+          <p><label for="password">Password</label></p>
+          <p><input type="password" name="password" placeholder="password"></p>
+
+       <div style="padding: 40px ;display: inline-block;">
+          <p><input type="submit" value="Sign In"></p>
+       </div>
+       <div style="display: inline-block;">
+          <p><input type="button" value="Sign Up" onclick="window.location.href='/signup/'"></p>
+       </div>
+
+        </fieldset>
+
+      </form>
+
+    </div> <!-- end login -->
+
+  </div>
+{% for message in messages %}
+<h3>{{ message }}</h3>
+{% endfor %}
+</body>
+{% endblock %}

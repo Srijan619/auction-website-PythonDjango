@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<body class="align">
+  <div class="grid">
+
+    <div id="login">
+
+      <h2><span class="fontawesome-lock"></span>Sign Up</h2>
+
+      <form action="#" method="POST">
+          {% csrf_token %}
+
+        <fieldset>
+
+          <p><label>Username</label></p>
+          <p><input type="text" name="username" placeholder="Username"></p>
+
+          <p><label>E-mail address</label></p>
+          <p><input type="email" name="email" placeholder="mail@address.com"></p>
+
+          <p><label>Password</label></p>
+          <p><input type="password" name="password" placeholder="password"></p>
+
+          <p><input type="submit" value="Sign Up"></p>
+
+        </fieldset>
+
+      </form>
+
+    </div> <!-- end login -->
+
+  </div>
+<div>
+    {% for message in messages %}
+    <h3>{{ message }}</h3>
+    {% endfor %}
+</div>
+</body>
+{% endblock %}

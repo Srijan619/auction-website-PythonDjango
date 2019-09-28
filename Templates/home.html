@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+  <div align="right">
+
+  {% if user.is_authenticated %}
+      <p class="button" style="background-color: cadetblue;display: inline-block"> Hello, {{ user.username }}</p>
+      <button type="button" class="button" value="sign_out" onclick="window.location.href='/signout/'"><span>Sign Out</span></button>
+  {% else %}
+      <button type="button" class="button" value="sign_in" onclick="window.location.href='/signin/'"><span>Sign In</span></button>
+      <button type="button" class="button" value="sign_up" onclick="window.location.href='/signup/'"><span>Sign Up</span></button>
+  {% endif %}
+      <select name="language" class="button" style="background-color: #28ad63">
+    <option value="english">English</option>
+    <option value="Nepali">Nepali</option>
+    <option value="finnish">Finnish</option>
+    <option value="Swedish">Swedish</option>
+  </select>
+   </div>
+
+{% endblock %}
