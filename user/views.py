@@ -16,18 +16,22 @@ class SignUp(View):
        username = request.POST['username']
        password = request.POST['password']
        email = request.POST['email']
-
+       context = {
+           "username": username,
+           "password": password,
+           "email": email
+       }
 
        if  username==""  and password=="" and email=="":
            messages.info(request, "Check all the fields")
-           return render(request,"signup",context)
+           return HttpResponseRedirect(reverse("signup"), context)
        else:
            if User.objects.filter(username=username).exists():
                messages.info(request, "This username has been taken")
-               return render(request,"signup")
+               return HttpResponseRedirect(reverse("signup"), context)
            elif User.objects.filter(email=email).exists():
                messages.info(request, "Email exits")
-               return render(request,"signup")
+               return HttpResponseRedirect(reverse("signup"), context)
            else:
                user = User.objects.create_user(username=username, password=password, email=email)
                user.save()
