@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from . import views
-
+from auction.rest_api import * # imports all rest api related materials
 
 app_name = 'auction'
 urlpatterns = [
@@ -10,5 +10,6 @@ urlpatterns = [
     re_path(r'^edit/(\d+)/$', views.EditAuction.as_view(), name='edit'),
     re_path(r'^bid/(\d+)/$', views.bid, name='bid'),
     re_path(r'^ban/(\d+)$', views.ban, name='ban'),
-    path('resolve/', views.resolve, name='resolve')
+    path('resolve/', views.resolve, name='resolve'),
+    path('api/', auction_list, name='auction_api')
 ]

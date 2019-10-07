@@ -13,7 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import patterns as patterns
+from django.conf.urls.i18n import i18n_patterns
 from django.urls import path, re_path, include
+from django.conf.urls import url
 from django.contrib import admin
 import user.views
 import auction.views
@@ -28,8 +31,10 @@ urlpatterns = [
     path('signin/', user.views.SignIn.as_view(), name='signin'),
     path('signout/', user.views.signout, name='signout'),
     path('changeLanguage/<lang_code>/', auction.views.changeLanguage, name='changeLanguage'),
-    path('changeCurrency/<currency_code>/', auction.views.changeCurrency, name='changeCurrency')
+    path('changeCurrency/<currency_code>/', auction.views.changeCurrency, name='changeCurrency'),
+
 ]
+
 
 urlpatterns += [
     path('api/v1/browse/', auction.services.BrowseAuctionApi.as_view(), name='browseauctionsapi'),
@@ -37,4 +42,6 @@ urlpatterns += [
     re_path(r'^api/v1/search/\??(?:&?[^=&]*=[^=&]*)*', auction.services.SearchAuctionWithTermApi.as_view(), name='searchauctionwithtermapi'),
     re_path(r'^api/v1/searchid/(\d+)/$', auction.services.SearchAuctionApiById.as_view(), name='searchauctionbyidapi'),
     re_path(r'^api/v1/bid/(\d+)/$', auction.services.BidAuctionApi.as_view(), name='bidauctionapi'),
+
 ]
+

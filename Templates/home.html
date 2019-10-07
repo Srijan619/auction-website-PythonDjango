@@ -1,23 +1,80 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% load i18n %}
 
+{% block content %}  <!--This part is extended to body of base.html ----->
 
-  <div align="right">
+<div>
 
-  {% if user.is_authenticated %}
-      <p class="button" style="background-color: cadetblue;display: inline-block"> Hello, {{ user.username }}</p>
-      <button type="button" class="button" value="sign_out" onclick="window.location.href='/signout/'"><span>Sign Out</span></button>
-  {% else %}
-      <button type="button" class="button" value="sign_in" onclick="window.location.href='/signin/'"><span>Sign In</span></button>
-      <button type="button" class="button" value="sign_up" onclick="window.location.href='/signup/'"><span>Sign Up</span></button>
-  {% endif %}
-      <select name="language" class="button" style="background-color: #28ad63">
-    <option value="english">English</option>
-    <option value="Nepali">Nepali</option>
-    <option value="finnish">Finnish</option>
-    <option value="Swedish">Swedish</option>
+<div align="right">
+<button type="button" style="width: 120px;height: 28px" class="button" value="create_auction" onclick="window.location.href='/auction/create'"><span>{% trans 'Create Auction' %}</span></button>
+
+<form id="search-form_3" style="display: inline-block" action="{% url 'auction:search' %}">
+<input type="text" name="term" value="{{ request.GET.term }}" class="search_3"/>
+<input type="submit"  class="submit_3" value="Search" />
+</form>
+
+  <select id="selectBox" name="language" class="button" style="background-color: #28ad63" onchange="changeFunc();" >
+
+    <option value="" >Language</option>
+    <option value="en" >English</option>
+    <option value="sv" >Swedish</option>
   </select>
-   </div>
+
+    <select id="currency" name="currency" class="button" style="background-color: #28ad63"  onchange="changeFuncCurrency();">
+
+    <option value="" >Currency</option>
+    <option value="EUR" >EUR</option>
+    <option value="USD" >USD</option>
+  </select>
+  {% if user.is_authenticated %}
+     <p  class="button" style="padding:4px ;display: inline-block; background-color: #777777; cursor: default">{{ user.username }}</p>
+    <button type="button" class="button" value="sign_out" onclick="window.location.href='/signout/'"><span>{% trans 'Sign-Out' %}</span></button>
+    <button type="button" class="button" value="sign_out" onclick="window.location.href='/user/profile/'"><span>{% trans 'Profile' %}</span></button>
+  {% else %}
+   <button type="button" class="button" value="sign_in" onclick="window.location.href='/signin/'"><span>{% trans 'Sign-In' %}</span></button>
+   <button type="button" class="button" value="sign_up" onclick="window.location.href='/signup/'"><span>{% trans 'Sign-Up' %}</span></button>
+  </div>
+
+
+  {% endif %}
+  <h1>{% trans 'List of available auctions' %}</h1>
+
+    {% for message in messages %}
+<h3>{{ message }}</h3>
+{% endfor %}
+   </div >
+  {% for auction in auctions %}
+
+ <div class="X" >
+
+<ul class="SG">
+<li class="sgLi">
+    <div class="box">
+
+    <h3 >{{auction.title}}</h3>
+        <hr>
+    <ul class="df">
+    <li><p style="font-weight: bold;display: inline-block">{% trans 'Desc:' %}</p> {{auction.description}}</li>
+        <hr>
+    <li><p style="font-weight: bold;display: inline-block">{% trans 'Created-Date:' %}</p> {{auction.created_date}}</li>
+        <hr>
+    <li><p style="font-weight: bold;display: inline-block">{% trans 'Deadline-Date:' %}</p> {{auction.deadline_date}}</li>
+        <hr>
+    <li><p style="font-weight: bold;display: inline-block">{% trans 'Status:' %}</p> {{auction.status}}</li>
+        <hr>
+     <li><p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{auction.minimum_price}} {% trans '€' %}</li>
+        <hr>
+        {% if user.is_authenticated %}
+     <li><p style="font-weight: bold;display: inline-block">{% trans 'Bid:' %}</p>   <input type="number" style="width: 100px;border-style:outset" step="any" min="{{ auction.minimum_price }}"/> {% trans '€' %}</li>
+     <hr>
+        <button type="button" class="button" value="bid" ><span>{% trans 'Make Bid' %}</span></button>
+        {% endif %}
+    </ul>
+  </div>
+ </li>
+</ul>
+ </div>
+          {% endfor %}
 
 {% endblock %}

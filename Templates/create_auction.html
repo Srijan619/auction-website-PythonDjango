@@ -1,0 +1,23 @@
+
+{% load i18n %}
+
+{% block content %}
+
+<div align="center">
+     <h1>Create Auction</h1>
+<form method="post">
+    {% csrf_token %}
+ <table border="1">
+    {{ form }}
+  </table>
+
+       <div >
+          <p style="display: inline-block;"><input type="submit" onclick="return confirm('Are you sure?')" value={% trans 'Create' %}></p>
+          <button type="button" value="cancel" onclick="window.location.href='/'"><span>{% trans 'Cancel' %}</span></button>
+       </div>
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+</form>
+{% endblock %}
+</div>

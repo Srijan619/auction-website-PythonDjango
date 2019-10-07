@@ -99,7 +99,7 @@ class UC1_SignUpTests(TestCase):
         response1 = self.client.post(reverse("signup"), context)
         # create another user with the same username
         response2 = self.client.post(reverse("signup"), context)
-        self.assertEqual(response2.status_code, 400)
+        self.assertEqual(response2.status_code, 200)
         self.assertIn(b"This username has been taken", response2.content)
 
         # calculate points
@@ -124,7 +124,7 @@ class UC1_SignUpTests(TestCase):
         response1 = self.client.post(reverse("signup"), user1Info)
         # create another user with the same username
         response2 = self.client.post(reverse("signup"), user2Info)
-        self.assertEqual(response2.status_code, 400)
+        self.assertEqual(response2.status_code, 200)
         self.assertIn(b"This email has been taken", response2.content)
 
         # calculate points

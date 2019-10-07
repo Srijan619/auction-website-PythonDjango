@@ -10,23 +10,23 @@
 
     <div id="login">
 
-      <h2><span class="fontawesome-lock"></span>{% trans 'Sign-In' %}</h2>
+      <h2><span class="fontawesome-lock"></span>{% trans 'Edit Profile' %}</h2>
 
       <form action="#" method="POST">
          {% csrf_token %}
         <fieldset>
 
-          <p><label for="username">{% trans 'Username' %}</label></p>
-          <p><input type="text" name="username" placeholder={% trans 'Username' %}></p>
+          <p><label for="username">{% trans 'E-mail Address' %}</label></p>
+          <p><input type="email" name="email" placeholder={% trans 'E-mail Address' %}></p>
 
           <p><label for="password">{% trans 'Password' %}</label></p>
           <p><input type="password" name="password" placeholder={% trans 'Password' %}></p>
 
        <div style="padding: 40px ;display: inline-block;">
-          <p><input type="submit" value={% trans 'Sign-In' %}></p>
+          <p><input type="submit" value={% trans 'Save' %}></p>
        </div>
        <div style="display: inline-block;">
-          <p><input type="button" value={% trans 'Sign-Up' %} onclick="window.location.href='/signup/'"></p>
+          <p><input type="button" value={% trans 'Cancel' %} onclick="window.location.href='/'"></p>
        </div>
 
         </fieldset>

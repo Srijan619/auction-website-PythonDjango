@@ -1,26 +1,71 @@
+from django.contrib import messages
+from django.conf import  settings
+from django.core.mail import  send_mail
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.shortcuts import render
 from .models import Auction
-from django.http import HttpResponse
-
-
+from django.urls import reverse
+from django.utils import translation
+from django.http import HttpResponse, HttpResponseRedirect
+from .forms import CreateAuctionForm
+from _datetime import datetime, timezone
 
 def index(request):
-    #auctions = Auction.objects.filter(status_exact="Active").order_by('created_date')
-    #return render(request, "base.html", {"auctions":auctions})
-    return render(request,"home.html")
 
+    auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+    return render(request, "home.html", {"auctions": auctions})
 
 
 def search(request):
-    #term = request.GET("term")
-    #auctions = Auction.objects.filter(status_exact="Active", title__contains=term).order_by('created_date')
-   # return render(request, "archive.html", {"auctions":auctions})
-   pass
+
+     if request.GET["term"] != "": # term is just a reference to search check html for search
+         criteria =request.GET["term"].strip()
+         auctions = Auction.objects.filter(title__icontains=criteria,status="Active").order_by('-created_date')
+     else:
+         auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+
+     return render(request,"home.html", {'auctions':auctions})
 
 
+@method_decorator(login_required, name="dispatch")
 class CreateAuction(View):
-    pass
+    def get(self,request):
+        form= CreateAuctionForm()
+        return render(request, "create_auction.html",{"form":form})
+
+    def post(self, request):
+        form=CreateAuctionForm(request.POST)
+
+        if form.is_valid():
+            cd= form.cleaned_data
+
+            deadline=cd.get("deadline_date")
+            tday=datetime.now(timezone.utc)
+
+            time_diff=deadline-tday
+            hour=time_diff.total_seconds()/3600.0
+            print(hour)
+            if(hour >= 72):
+               new_auction=Auction.objects.create(title=cd["title"], description=cd["description"], minimum_price=cd["minimum_price"],
+                                               deadline_date=cd["deadline_date"],)
+               new_auction.save()
+               subject="Auction created"
+               message="Thank you for creating an auction. Below link provides to modify the auction details."
+               to_email= [request.user.email]
+
+               send_mail(subject,message,'no-reply@yaas.com',to_email,fail_silently=False)
+               messages.info(request, "Auction has been created successfully, check your emails")
+               return HttpResponseRedirect(reverse("auction:index"))
+            else:
+                messages.info(request,"The deadline date should be at least 72 hours from now")
+                return render(request,"create_auction.html",{"form":form})
+
+
+        else:
+            print("Invalid date")
+            return render(request, "create_auction.html", {"form":form})
 
 class EditAuction(View):
     pass
@@ -39,10 +84,26 @@ def resolve(request):
 
 
 def changeLanguage(request, lang_code):
-    pass
+
+    translation.activate(lang_code)
+    request.session[translation.LANGUAGE_SESSION_KEY] = lang_code
+
+    auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+
+    if lang_code=="en":
+     messages.info(request,"Language has been changed to English ")
+    elif lang_code=="sv":
+     messages.info(request,"Language has been changed to Swedish")
+    else:
+     messages.info(request,"Language not selected")
+
+    return render(request,"home.html", {'auctions':auctions})
 
 
 def changeCurrency(request, currency_code):
-    pass
+
+    auctions=Auction.objects.filter(status="Active").order_by('-created_date')
+
+    return render(request, "home.html", {'auctions':auctions})
 
 

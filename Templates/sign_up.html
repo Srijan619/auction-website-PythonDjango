@@ -1,30 +1,30 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load i18n %}
 {% block content %}
 <body class="align">
   <div class="grid">
 
     <div id="login">
 
-      <h2><span class="fontawesome-lock"></span>Sign Up</h2>
+      <h2><span class="fontawesome-lock"></span>{% trans 'Sign Up' %}</h2>
 
       <form action="#" method="POST">
           {% csrf_token %}
 
         <fieldset>
 
-          <p><label>Username</label></p>
-          <p><input type="text" name="username" placeholder="Username"></p>
+          <p><label>{% trans 'Username' %}</label></p>
+          <p><input type="text" name="username" placeholder={% trans 'Username' %}></p>
 
-          <p><label>E-mail address</label></p>
+          <p><label>{% trans 'E-mail Address' %}</label></p>
           <p><input type="email" name="email" placeholder="mail@address.com"></p>
 
-          <p><label>Password</label></p>
-          <p><input type="password" name="password" placeholder="password"></p>
+          <p><label>{% trans 'Password' %}</label></p>
+          <p><input type="password" name="password" placeholder={% trans 'Password' %}></p>
 
-          <p><input type="submit" value="Sign Up"></p>
+          <p><input type="submit" value={% trans 'Sign-Up' %}></p>
 
         </fieldset>
 
