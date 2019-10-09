@@ -101,8 +101,32 @@ class EditAuction(View):
             messages.info(request, _("This is not your auction"))
             return HttpResponseRedirect(reverse("auction:index"))
 
+@login_required()
 def bid(request, item_id):
-    pass
+
+    auction= Auction.objects.get(id=item_id)
+    auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+    #print(auction.minimum_price)
+    #print(auction.bid_price)
+    if auction.hosted_by==request.user.username:
+        messages.info(request,_("You cannot bid on your own auctions"))
+        return render(request, "home.html", {"auctions": auctions})
+    elif auction.status=="Inactive":
+        messages.info(request,"You can only bid on active auctions")
+        return render(request, "home.html", {"auctions": auctions})
+    elif auction.deadline_date==datetime.now():
+        messages.info(request, "You can only bid on active auctions")
+        return render(request, "home.html", {"auctions": auctions})
+    elif auction.minimum_price<= auction.bid_price:
+        messages.info(request,"New bid must be greater than the current bid for at least 0.01")
+        return render(request, "home.html", {"auctions": auctions})
+    else:
+        bid=request.POST.get('bid','')
+        auction.bid_price=bid
+        print(auction.bid_price)
+        auction.save()
+        messages.info(request,"You has bid successfully")
+        return HttpResponseRedirect(reverse("auction:index"))
 
 
 def ban(request, item_id):

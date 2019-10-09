@@ -68,13 +68,15 @@
       <li><p style="font-weight: bold;display: inline-block">{% trans 'Hosted by:' %}</p> {{auction.hosted_by}}</li>
     <hr>
         {% if user.is_authenticated %}
-     <li><p style="font-weight: bold;display: inline-block">{% trans 'Bid:' %}</p>   <input type="number" style="width: 100px;border-style:outset" step="any" min="{{ auction.minimum_price }}"/> {% trans '€' %}</li>
+     <li><p style="font-weight: bold;display: inline-block">{% trans 'Bid:' %}</p>   <input name="bid" type="number" style="width: 100px;border-style:outset" step="0.01" min="{{ auction.minimum_price }}"/> {% trans '€' %}</li>
      <hr>
 
-        <button type="button" class="button" value="bid" ><span>{% trans 'Make Bid' %}</span></button>
           {% if user.username == auction.hosted_by %}
           <button type="button" class="button" value="edit_desc" style="float: right" onclick="window.location.href='/auction/edit/'+ {{auction.id}}"><span>{% trans 'Edit Desc' %}</span></button>
-         {% endif %}
+         {% else %}
+          <button type="button" class="button" value="bid"  onclick="window.location.href='/auction/bid/'+ {{auction.id}}"><span>{% trans 'Make Bid' %}</span></button>
+
+          {% endif %}
         {% endif %}
     </ul>
   </div>
