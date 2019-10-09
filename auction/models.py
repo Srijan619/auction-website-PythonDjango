@@ -8,6 +8,7 @@ class Auction(models.Model):
     deadline_date = models.DateTimeField()
     created_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=500, default="Active")
+    hosted_by = models.CharField(max_length=45, default="")
 
 
     def __str__(self):

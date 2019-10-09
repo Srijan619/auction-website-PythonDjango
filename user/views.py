@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.template.loader import render_to_string, get_template
 from django.contrib.auth.models import User, auth
+from django.contrib.auth import update_session_auth_hash
 
 from .models import Account
 
@@ -89,6 +90,7 @@ class EditProfile(View):
              user.email = email
              user.set_password(password)
              user.save()
+             update_session_auth_hash(request, user)
              messages.info(request, "Updated successfully")
              return HttpResponseRedirect(reverse('signin'))
 

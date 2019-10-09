@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-06 22:59+0300\n"
+"POT-Creation-Date: 2019-10-09 13:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,9 +22,14 @@ msgstr ""
 msgid "Create"
 msgstr "Skapa"
 
-#: .\Templates\create_auction.html:16 .\Templates\profile.html:29
+#: .\Templates\create_auction.html:16 .\Templates\edit_auction.html:16
+#: .\Templates\profile.html:29
 msgid "Cancel"
 msgstr "Avbryt"
+
+#: .\Templates\edit_auction.html:15 .\Templates\profile.html:26
+msgid "Save"
+msgstr "Spara"
 
 #: .\Templates\home.html:10
 #, fuzzy
@@ -54,23 +59,47 @@ msgstr "Registera"
 msgid "List of available auctions"
 msgstr "lista över tillgängliga auktioner"
 
-#: .\Templates\home.html:59
+#: .\Templates\home.html:58
 msgid "Desc:"
 msgstr "Beskriv:"
 
-#: .\Templates\home.html:61
+#: .\Templates\home.html:60
 #, fuzzy
 msgid "Created-Date:"
 msgstr "Skapat-Datum:"
 
-#: .\Templates\home.html:63
+#: .\Templates\home.html:62
 #, fuzzy
 msgid "Deadline-Date:"
 msgstr "Sista-Datum:"
 
-#: .\Templates\home.html:65
+#: .\Templates\home.html:64
 msgid "Status:"
 msgstr "Ställning:"
+
+#: .\Templates\home.html:66
+msgid "Start Price:"
+msgstr "startpris"
+
+#: .\Templates\home.html:66 .\Templates\home.html:71
+msgid "€"
+msgstr ""
+
+#: .\Templates\home.html:68
+msgid "Hosted by:"
+msgstr "Värdad av"
+
+#: .\Templates\home.html:71
+msgid "Bid:"
+msgstr "Bud"
+
+#: .\Templates\home.html:74
+msgid "Make Bid"
+msgstr "Lägg Bud"
+
+#: .\Templates\home.html:76
+msgid "Edit Desc"
+msgstr "Redigera beskriv"
 
 #: .\Templates\log_in.html:19 .\Templates\log_in.html:20
 #: .\Templates\sign_up.html:18 .\Templates\sign_up.html:19
@@ -92,12 +121,39 @@ msgstr "Redigera profil"
 msgid "E-mail Address"
 msgstr "E-postadress"
 
-#: .\Templates\profile.html:26
-msgid "Save"
-msgstr "Spara"
-
 #: .\Templates\sign_up.html:11
 #, fuzzy
 #| msgid "Sign-Up"
 msgid "Sign Up"
 msgstr "Registera"
+
+#: .\auction\views.py:58
+msgid "Auction created"
+msgstr "Auktion skapad"
+
+#: .\auction\views.py:59
+msgid ""
+"Thank you for creating an auction. Below link provides to modify the auction "
+"details."
+msgstr "Tack för att du skapade en auktion. Länken nedan ger för att ändra auktionen "
+"detaljer."
+
+#: .\auction\views.py:63
+msgid "Auction has been created successfully, check your emails"
+msgstr "Auktionen har skapats, kolla dina e-postmeddelanden"
+
+#: .\auction\views.py:66
+msgid "The deadline date should be at least 72 hours from now"
+msgstr "Tidsfristen bör vara minst 72 timmar från och med nu"
+
+#: .\auction\views.py:87
+msgid "Auction has been updated successfully"
+msgstr "Auktionen har uppdaterats framgångsrikt"
+
+#: .\auction\views.py:114
+msgid "Language has been changed to Swedish"
+msgstr "Språket har ändrats till svenska"
+
+#: .\auction\views.py:116
+msgid "Language not selected"
+msgstr "Språket är inte valt"
