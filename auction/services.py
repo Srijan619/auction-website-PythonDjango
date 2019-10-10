@@ -12,7 +12,7 @@ from auction.serializers import AucSerializer
 
 class BrowseAuctionApi(APIView):
     def get(self,request):
-     auctions = Auction.objects.all()
+     auctions = Auction.objects.all(status="Active")
      serializer = AucSerializer(auctions, many=True)
      return Response(serializer.data)
 

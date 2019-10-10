@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.conf import  settings
-from django.core.mail import  send_mail
+from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -9,123 +9,129 @@ from .models import Auction
 from django.urls import reverse
 from django.utils import translation
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import CreateAuctionForm,EditAuctionForm,Auction
+from .forms import CreateAuctionForm, EditAuctionForm, Auction
 from django.utils.translation import gettext as _
 from _datetime import datetime, timezone
 
-def index(request):
 
+def index(request):
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
     return render(request, "home.html", {"auctions": auctions})
 
 
 def search(request):
+    if request.GET["term"] != "":  # term is just a reference to search check html for search
+        criteria = request.GET["term"].strip()
+        auctions = Auction.objects.filter(title__icontains=criteria, status="Active").order_by('-created_date')
+    else:
+        auctions = Auction.objects.filter(status="Active").order_by('-created_date')
 
-     if request.GET["term"] != "": # term is just a reference to search check html for search
-         criteria =request.GET["term"].strip()
-         auctions = Auction.objects.filter(title__icontains=criteria,status="Active").order_by('-created_date')
-     else:
-         auctions = Auction.objects.filter(status="Active").order_by('-created_date')
-
-     return render(request,"home.html", {'auctions':auctions})
+    return render(request, "home.html", {'auctions': auctions})
 
 
 @method_decorator(login_required, name="dispatch")
 class CreateAuction(View):
-    def get(self,request):
-        form= CreateAuctionForm()
-        return render(request, "create_auction.html",{"form":form})
+    def get(self, request):
+        form = CreateAuctionForm()
+        return render(request, "create_auction.html", {"form": form})
 
     def post(self, request):
-        form=CreateAuctionForm(request.POST)
+        form = CreateAuctionForm(request.POST)
 
         if form.is_valid():
-            cd= form.cleaned_data
+            cd = form.cleaned_data
 
-            deadline=cd.get("deadline_date")
-            tday=datetime.now(timezone.utc)
+            deadline = cd.get("deadline_date")
+            tday = datetime.now(timezone.utc)
 
-            time_diff=deadline-tday
-            hour=time_diff.total_seconds()/3600.0
+            time_diff = deadline - tday
+            hour = time_diff.total_seconds() / 3600.0
             print(hour)
 
-            hosted_by= request.user.username
-            if(hour >= 72):
-               new_auction=Auction.objects.create(title=cd["title"], description=cd["description"], minimum_price=cd["minimum_price"],
-                                               deadline_date=cd["deadline_date"], hosted_by=hosted_by)
+            hosted_by = request.user.username
+            if (hour >= 72):
+                new_auction = Auction.objects.create(title=cd["title"], description=cd["description"],
+                                                     minimum_price=cd["minimum_price"],
+                                                     deadline_date=cd["deadline_date"], hosted_by=hosted_by)
 
-               new_auction.save()
-               subject=_("Auction created")
-               message=_("Thank you for creating an auction. Below link provides to modify the auction details.")
-               to_email= [request.user.email]
+                new_auction.save()
+                subject = _("Auction created")
+                message = _("Thank you for creating an auction. Below link provides to modify the auction details.")
+                to_email = [request.user.email]
 
-               send_mail(subject,message,'no-reply@yaas.com',to_email,fail_silently=False)
-               messages.info(request, _("Auction has been created successfully, check your emails"))
-               return HttpResponseRedirect(reverse("auction:index"))
+                send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
+                messages.info(request, _("Auction has been created successfully, check your emails"))
+                return HttpResponseRedirect(reverse("auction:index"))
             else:
-                messages.info(request,_("The deadline date should be at least 72 hours from now"))
-                return render(request,"create_auction.html",{"form":form})
+                messages.info(request, _("The deadline date should be at least 72 hours from now"))
+                return render(request, "create_auction.html", {"form": form})
 
 
         else:
             print("Invalid date")
-            return render(request, "create_auction.html", {"form":form})
+            return render(request, "create_auction.html", {"form": form})
+
 
 @method_decorator(login_required, name="dispatch")
 class EditAuction(View):
 
-   def get(self,request,id):
+    def get(self, request, id):
         auction = Auction.objects.get(id=id)
+        print("None")
         if auction.hosted_by == request.user.username:
-            form=EditAuctionForm()
+            print(request.user.username)
+            print(auction.id)
+            form = EditAuctionForm()
             return render(request, "create_auction.html", {"form": form})
         else:
-            messages.info(request,_("This is not your auction"))
+            messages.info(request, "That is not your auction to edit")
             return HttpResponseRedirect(reverse("auction:index"))
-   def post(self,request,id):
-        auction= Auction.objects.get(id=id)
-        if auction.hosted_by== request.user.username:
+
+    def post(self, request, id):
+        auction = Auction.objects.get(id=id)
+        if auction.hosted_by == request.user.username:
             form = EditAuctionForm(request.POST)
             if form.is_valid():
-                cd=form.cleaned_data
-                title=cd['title']
-                description=cd['description']
-                auction.description=description
-                auction.title=title
+                cd = form.cleaned_data
+                title = cd['title']
+                description = cd['description']
+                auction.description = description
+                auction.title = title
                 auction.save()
-                messages.info(request,_("Auction has been updated successfully"))
+                messages.info(request, _("Auction has been updated successfully"))
                 return HttpResponseRedirect(reverse("auction:index"))
             else:
                 return render(request, "create_auction.html", {"form": form})
         else:
-            messages.info(request, _("This is not your auction"))
+            messages.info(request, _("That is not your auction"))
             return HttpResponseRedirect(reverse("auction:index"))
+
 
 @login_required()
 def bid(request, item_id):
-
-    auction= Auction.objects.get(id=item_id)
+    auction = Auction.objects.get(id=item_id)
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
-    #print(auction.minimum_price)
-    #print(auction.bid_price)
-    if auction.hosted_by==request.user.username:
-        messages.info(request,_("You cannot bid on your own auctions"))
+    # print(auction.minimum_price)
+    # print(auction.bid_price)
+    bid = request.POST.get('bid', '')
+    print(bid)
+    if auction.hosted_by == request.user.username:
+        messages.info(request, _("You cannot bid on your own auctions"))
         return render(request, "home.html", {"auctions": auctions})
-    elif auction.status=="Inactive":
-        messages.info(request,"You can only bid on active auctions")
-        return render(request, "home.html", {"auctions": auctions})
-    elif auction.deadline_date==datetime.now():
+    elif auction.status == "Inactive":
         messages.info(request, "You can only bid on active auctions")
         return render(request, "home.html", {"auctions": auctions})
-    elif auction.minimum_price<= auction.bid_price:
-        messages.info(request,"New bid must be greater than the current bid for at least 0.01")
+    elif auction.deadline_date == datetime.now():
+        messages.info(request, "You can only bid on active auctions")
+        return render(request, "home.html", {"auctions": auctions})
+    elif auction.minimum_price <= auction.new_price:
+        messages.info(request, "New bid must be greater than the current bid for at least 0.01")
         return render(request, "home.html", {"auctions": auctions})
     else:
-        bid=request.POST.get('bid','')
-        auction.bid_price=bid
-        print(auction.bid_price)
+        auction.new_price = bid
+        print(auction.new_price)
         auction.save()
-        messages.info(request,"You has bid successfully")
+        messages.info(request, "You has bid successfully")
         return HttpResponseRedirect(reverse("auction:index"))
 
 
@@ -138,26 +144,22 @@ def resolve(request):
 
 
 def changeLanguage(request, lang_code):
-
     translation.activate(lang_code)
     request.session[translation.LANGUAGE_SESSION_KEY] = lang_code
 
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
 
-    if lang_code=="en":
-     messages.info(request,"Language has been changed to English ")
-    elif lang_code=="sv":
-     messages.info(request, _("Language has been changed to Swedish "))
+    if lang_code == "en":
+        messages.info(request, "Language has been changed to English ")
+    elif lang_code == "sv":
+        messages.info(request, _("Language has been changed to Swedish "))
     else:
-     messages.info(request,_("Language not selected"))
+        messages.info(request, _("Language not selected"))
 
-    return render(request,"home.html", {'auctions':auctions})
+    return render(request, "home.html", {'auctions': auctions})
 
 
 def changeCurrency(request, currency_code):
+    auctions = Auction.objects.filter(status="Active").order_by('-created_date')
 
-    auctions=Auction.objects.filter(status="Active").order_by('-created_date')
-
-    return render(request, "home.html", {'auctions':auctions})
-
-
+    return render(request, "home.html", {'auctions': auctions})
