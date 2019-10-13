@@ -12,16 +12,16 @@ from auction.serializers import AucSerializer
 
 class BrowseAuctionApi(APIView):
     def get(self,request):
-     auctions = Auction.objects.all(status="Active")
-     serializer = AucSerializer(auctions, many=True)
-     return Response(serializer.data)
+      auctions = Auction.objects.filter(status="Active")
+      serializer = AucSerializer(auctions, many=True)
+      return Response(serializer.data, status=200)
 
 
 class SearchAuctionApi(APIView):
-    def get(self, request):
-        auctions = Auction.objects.all()
+    def get(self, request,title):
+        auctions = Auction.objects.filter(title__icontains=title, status="Active").order_by('-created_date')
         serializer = AucSerializer(auctions, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
 
 
 class SearchAuctionWithTermApi(APIView):
@@ -29,16 +29,18 @@ class SearchAuctionWithTermApi(APIView):
         term=request.GET["term"]
         auctions = Auction.objects.filter(title__icontains=term, status="Active").order_by('-created_date')
         serializer = AucSerializer(auctions, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
 
 
 class SearchAuctionApiById(APIView):
-    def get(self, request,id):
-        term = request.GET["Id"]
-        auctions = Auction.objects.filter(title__icontains=term, status="Active").order_by('-created_date')
+    def get(self, request, id):
+        auctions = Auction.objects.filter(id=id, status="Active").order_by('-created_date')
         serializer = AucSerializer(auctions, many=True)
         return Response(serializer.data)
 
 
 class BidAuctionApi(APIView):
-    pass
+    def get(self, request, id):
+        pass
+    def post(self,request, id):
+        pass

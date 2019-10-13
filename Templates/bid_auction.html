@@ -1,0 +1,102 @@
+{% load i18n %}
+<style>
+    table {
+       border-style: inset;
+
+        width: fit-content;
+    }
+
+    th:first-child {
+        font-weight: bold;
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+
+        font-weight: lighter;
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+</style>
+{% block content %}
+
+    <div align="center">
+    <h1>Bid Auction</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div style="display: flex;flex-direction: column;float: left" align="center">
+            <table style="display: inline-block; width: 80%;float:left" align="center">
+                <tr>
+                    <th>Title:</th>
+                    <th>{{ auction.title }}</th>
+                </tr>
+
+                <tr>
+                    <th>Description:</th>
+                    <th>{{ auction.description }}</th>
+                </tr>
+                <tr>
+                    <th>Created Date:</th>
+                    <th>{{ auction.created_date }}</th>
+                </tr>
+                <tr>
+                    <th>Deadline Date:</th>
+                    <th>{{ auction.deadline_date }}</th>
+                </tr>
+                <tr>
+                    <th>Status:</th>
+                    <th>{{ auction.status }}</th>
+                </tr>
+                <tr>
+                    <th>Start Price:</th>
+                    <th>{{ auction.minimum_price }}</th>
+                </tr>
+                <tr>
+                    <th>Hosted By:</th>
+                    <th>{{ auction.hosted_by }}</th>
+                </tr>
+                <tr>
+                    <th>Current Highest Bid:</th>
+                    <th>{{ biddings.new_price }}</th>
+                </tr>
+                <tr>
+                    <th>{{ form }}</th>
+
+                </tr>
+
+            </table>
+
+            <div >
+                <p style="display: inline-block;"><input type="submit" value={% trans 'Bid' %}></p>
+                <button type="button" value="cancel" onclick="window.location.href='/'">
+                    <span>{% trans 'Cancel' %}</span></button>
+            </div>
+        </div>
+
+        <table style="float: left;width: 50%;margin: 5px;">
+            <tr>
+                <th style="font-weight: bold">Bidder</th>
+                <th style="font-weight: bold">Current Bids</th>
+                <th style="font-weight: bold">Bid time</th>
+            </tr>
+            {% for bidding in bidding_all %}
+
+            <tr>
+                <th style="font-weight: lighter">{{ bidding.bidder }}</th>
+                <th>{{ bidding.new_price }}</th>
+                <th>{{ bidding.bid_time }}</th>
+            </tr>
+ {% endfor %}
+        </table>
+
+
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </form>
+{% endblock %}
+</div>

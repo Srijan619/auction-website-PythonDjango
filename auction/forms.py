@@ -17,3 +17,6 @@ class CreateAuctionForm(forms.Form):
 class EditAuctionForm(forms.Form):
     title=forms.CharField(max_length=256)
     description=forms.CharField(widget=forms.Textarea())
+
+class BiddingForm(forms.Form):
+    new_price=forms.FloatField(label="Bid Price", min_value=0.01)
