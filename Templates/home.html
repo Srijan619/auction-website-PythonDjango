@@ -7,6 +7,10 @@
     <div>
 
         <div align="right">
+        {% if user.is_superuser %}
+            <button type="button" style="width: 120px;height: 28px" class="button" value="banned_auction"
+                    onclick="window.location.href='/auction/banned'"><span>{% trans 'Banned Auction' %}</span></button>
+        {% endif %}
             <button type="button" style="width: 120px;height: 28px" class="button" value="create_auction"
                     onclick="window.location.href='/auction/create'"><span>{% trans 'Create Auction' %}</span></button>
 
@@ -54,59 +58,68 @@
     </div>
     {% for auction in auctions %}
 
-            <div class="X">
+        <div class="X">
 
-                <ul class="SG">
-                    <li class="sgLi">
-                        <div class="box">
+            <ul class="SG">
+                <li class="sgLi">
+                    <div class="box">
 
-                            <h3>{{ auction.title }}</h3>
+                        <h3>{{ auction.title }}</h3>
+                        <hr>
+                        <ul class="df">
+                            <li>
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Desc:' %}</p> {{ auction.description }}
+                            </li>
                             <hr>
-                            <ul class="df">
-                                <li>
-                                    <p style="font-weight: bold;display: inline-block">{% trans 'Desc:' %}</p> {{ auction.description }}
-                                </li>
-                                <hr>
-                                <li>
-                                    <p style="font-weight: bold;display: inline-block">{% trans 'Created-Date:' %}</p> {{ auction.created_date }}
-                                </li>
-                                <hr>
-                                <li>
-                                    <p style="font-weight: bold;display: inline-block">{% trans 'Deadline-Date:' %}</p> {{ auction.deadline_date }}
-                                </li>
-                                <hr>
-                                <li>
-                                    <p style="font-weight: bold;display: inline-block">{% trans 'Status:' %}</p> {{ auction.status }}
-                                </li>
-                                <hr>
-                                <li>
-                                    <p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{ auction.minimum_price }} {% trans '€' %}
-                                </li>
-                                <hr>
-                                <li>
-                                    <p style="font-weight: bold;display: inline-block">{% trans 'Hosted by:' %}</p> {{ auction.hosted_by }}
-                                </li>
-                                <hr>
+                            <li>
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Created-Date:' %}</p> {{ auction.created_date }}
+                            </li>
+                            <hr>
+                            <li>
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Deadline-Date:' %}</p> {{ auction.deadline_date }}
+                            </li>
+                            <hr>
+                            <li>
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Status:' %}</p> {{ auction.status }}
+                            </li>
+                            <hr>
+                            <li>
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{ auction.minimum_price }} {% trans '€' %}
+                            </li>
+                            <hr>
+                            <li>
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Hosted by:' %}</p> {{ auction.hosted_by }}
+                            </li>
+                            <hr>
 
-                                {% if user.is_authenticated %}
-                                    {% if user.username != auction.hosted_by %}
-                                            <button name="submit_bid"
-                                                   style="background-color: #28ad63" type="button" value="BID" class="button" onclick="window.location.href='/auction/bid/'+{{ auction.id }}"><span>{% trans 'Bid' %}</span></button>
+                            {% if user.is_authenticated %}
+                                {% if user.username != auction.hosted_by %}
+                                    <button name="submit_bid"
+                                            style="background-color: #28ad63" type="button" value="BID" class="button"
+                                            onclick="window.location.href='/auction/bid/'+{{ auction.id }}">
+                                        <span>{% trans 'Bid' %}</span></button>
 
-                                     {% elif user.username == auction.hosted_by %}
+                                {% elif user.username == auction.hosted_by %}
                                     <button type="button" class="button" value="edit_desc" style="float: right"
                                             onclick="window.location.href='/auction/edit/'+ {{ auction.id }}">
                                         <span>{% trans 'Edit Desc' %}</span></button>
+
+                                {% endif %}
+                                {% if user.is_superuser %}
+                                    <input name="ban" formmethod="post"
+                                            type="submit" value="Ban" class="button"
+                                            onclick="window.location.href='/auction/ban/'+{{ auction.id }}">
+                                        </input>
                                 {% endif %}
                                 </li>
 
 
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    {% endfor %}
 
 {% endblock %}

@@ -115,7 +115,10 @@ class bid(View):
         auctions = Auction.objects.filter(status="Active").order_by('-created_date')
         bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
         biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
-        if auction.hosted_by == request.user.username:
+        if auction.status == "Banned":
+            messages.info(request, "Cannot bid on banned auction")
+            return HttpResponseRedirect(reverse('auction:index'))
+        elif auction.hosted_by == request.user.username:
             messages.info(request, _("You cannot bid on your own auctions"))
             return render(request, "home.html", {"auctions": auctions})
         elif auction.status == "Inactive":
@@ -139,7 +142,8 @@ class bid(View):
         if form.is_valid():
             cd = form.cleaned_data
             new_price = cd['new_price']
-            if ((biddings is None and (float(auction.minimum_price))< new_price) or(biddings is not None and (float(biddings.new_price)) < new_price)):
+            if ((biddings is None and (float(auction.minimum_price)) < new_price) or (
+                    biddings is not None and (float(biddings.new_price)) < new_price)):
 
                 bids = Bidding.objects.create(new_price=new_price, hosted_by=auction.hosted_by,
                                               bidder=request.user.username, auction=auction)
@@ -172,8 +176,42 @@ class bid(View):
                           {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddingss})
 
 
+@login_required()
 def ban(request, item_id):
-    pass
+    if request.user.is_superuser:
+        auction = Auction.objects.get(id=item_id)
+        biddings = Bidding.objects.filter(auction_id=item_id)
+        auction.status = "Banned"
+        auction.save()
+
+        ## Email to the Host
+        user = User.objects.get(username=auction.hosted_by)
+        subject = _("Banned")
+        message2 = _("Hello Host, Your auction was banned ")
+        to_email2 = [user.email]
+        send_mail(subject, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+
+        ## Email to the Bidders
+
+        message = _("Hello bidders, The bidded auction was banned ")
+
+        bidder = Bidding.objects.filter(auction_id=item_id)
+        for bidders in bidder:
+            emails = User.objects.filter(username=bidders.bidder)
+            for email in emails:
+                receipent_list = [email.email]
+                send_mail(subject, message, 'no-reply@yaas.com', receipent_list, fail_silently=False)
+        messages.info(request, "Ban successfully")
+        return HttpResponseRedirect(reverse('auction:index'))
+    else:
+        messages.info(request, "You are not entitled to ban an auction.")
+        return HttpResponseRedirect(reverse('auction:index'))
+
+
+class bannedAuctions(View):
+    def get(self, request):
+        auctions = Auction.objects.filter(status="Banned").order_by('-created_date')
+        return render(request, "banned_auctions.html", {"auctions": auctions})
 
 
 def resolve(request):
