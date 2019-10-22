@@ -28,12 +28,10 @@ class SignUp(View):
             return render(request, "sign_up.html")
         else:
             if User.objects.filter(username=username).exists():
-
                 messages.info(request, "This username has been taken")
                 return render(request, "sign_up.html")
 
             elif User.objects.filter(email=email).exists():
-
                 messages.info(request, "This email has been taken")
                 return render(request, "sign_up.html")
             else:

@@ -4,7 +4,7 @@
 {% block content %}
 
 <div align="center">
-     <h1>Bid an Auction</h1>
+     <h1>Create an Auction</h1>
 <form method="post">
     {% csrf_token %}
  <table border="1">
@@ -12,7 +12,7 @@
   </table>
 
        <div >
-          <p style="display: inline-block;"><input type="submit" onclick="return confirm('Are you sure?')" value={% trans 'Bid' %}></p>
+          <p style="display: inline-block;"><input type="submit" onclick="return confirm('Are you sure?')" value={% trans 'Create' %}></p>
           <button type="button" value="cancel" onclick="window.location.href='/'"><span>{% trans 'Cancel' %}</span></button>
        </div>
     {% for message in messages %}
