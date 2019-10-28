@@ -251,18 +251,13 @@ def changeCurrency(request, currency_code):
 
     # Your JSON object
     usd_rate = data["rates"][currency_code]
-    print(usd_rate)
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
-    bidding= Bidding.objects.all()
+
 
     for item in auctions:
-        print(float(item.minimum_price) * usd_rate)
         new_pris = round(float(item.minimum_price) * usd_rate, 2)
         item.minimum_price = new_pris
 
-    for bidd in bidding:
-        new_bid=round(float(bidd.new_price) * usd_rate,2)
-        print(new_bid)
-        bidd.new_price=new_bid
-        request.session['new_bid']=new_bid
+    messages.info(request,"Currency has been changed to "+currency_code)
+
     return render(request, "home.html", {'auctions': auctions})

@@ -4,6 +4,9 @@ from rest_framework.authentication import BasicAuthentication, TokenAuthenticati
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+from django.utils.translation import gettext as _
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
 
 from django.shortcuts import get_object_or_404
 
@@ -50,4 +53,35 @@ class BidAuctionApi(APIView):
         return Response(serializer.data, status=200)
 
     def post(self, request, id):
-        pass
+
+        biddings = Bidding.objects.filter(auction_id=id).order_by('new_price').last()
+        auction = Auction.objects.get(id=id)
+
+        data = request.data
+        serializer = BidSerializer(biddings, data=data)
+        if auction.hosted_by == request.user.username:
+            return Response({'message': "Cannot bid on own auction"}, status=400)
+        elif auction.status == "Banned":
+            return Response({'message': "Can only bid on active auction"}, status=400)
+        elif (float(biddings.new_price) >= float(data['new_price'])):
+            return Response({'message':"New bid must be greater than the current bid at least 0.01"},status=400)
+        elif serializer.is_valid():
+            serializer.save()
+
+            ## Email to the bidder
+            subject = _("Bid Successful")
+            message = _("Thank you for bidding  an auction. You will be notified of the situation.")
+            to_email = [request.user.email]
+
+            send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
+
+            ## Email to the Host
+            user = User.objects.get(username=auction.hosted_by)
+            subject2 = _("New bidder")
+            message2 = _("Hello, There was a new bid by " + request.user.username)
+            to_email2 = [user.email]
+
+            send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+            return Response({'message':"Bid successfully",'':serializer.data},status=200)
+        else:
+            return Response(serializer.errors, status=400)
