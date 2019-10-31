@@ -1,0 +1,56 @@
+
+{% load i18n %}
+
+{% block content %}
+
+    <div align="center" >
+    <h1>List of Resolved Auctions</h1>
+    <div align="left" style="padding-left: 5px" class="button" >
+        <button type="button"  value="cancel" onclick="window.location.href='/'"><span>{% trans 'Go Back' %}</span>
+        </button>
+    </div>
+    <form method="get">
+        {% csrf_token %}
+        <div >
+            <table style="float: left;width: 80%;margin: 5px; border-style: inset;font-size: 24px" rules="all">
+                <tr >
+                    <th style="font-weight: bold;border: 1px solid black">Title</th>
+                    <th style="font-weight: bold;border: 1px solid black">Description</th>
+                    <th style="font-weight: bold;border: 1px solid black">Started Price</th>
+                    <th style="font-weight: bold;border: 1px solid black">Created Date</th>
+                    <th style="font-weight: bold;border: 1px solid black">Deadline Date</th>
+                    <th style="font-weight: bold;border: 1px solid black">Status</th>
+                    <th style="font-weight: bold;border: 1px solid black">Hosted By</th>
+                    <th style="font-weight: bold;border: 1px solid black">Winner</th>
+                    <th style="font-weight: bold;border: 1px solid black">Winning Price</th>
+
+                </tr>
+                {% for auction in auctions %}  {% for bidding in biddings %}
+                    <tr >
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.title }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.description }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.minimum_price }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.created_date }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.deadline_date }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.status }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.hosted_by }}</th>
+
+
+                    <th style="font-weight: lighter;border-bottom-style: solid">{{ bidding.bidder }}</th>
+                    <th style="font-weight: lighter;border-bottom-style: solid">{{ bidding.new_price }}</th>
+
+
+                    </tr>
+
+                {% endfor %}{% endfor %}
+
+            </table>
+        </div>
+
+
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </form>
+{% endblock %}
+</div>

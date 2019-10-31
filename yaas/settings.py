@@ -27,7 +27,7 @@ SECRET_KEY = '9ab)#s(z-)5gesi5!%5+k8ha4p#vom8k0ma%51-ml^0!l&c!a#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','192.168.10.57']
 
 # Application definition
 PREREQ_APPS = [
@@ -149,3 +149,5 @@ LOGIN_URL = '/signin/'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR,'email')
+
+

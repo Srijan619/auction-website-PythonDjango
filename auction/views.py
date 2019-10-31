@@ -184,7 +184,7 @@ class bid(View):
 
         else:
             return render(request, "bid_auction.html",
-                          {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddingss})
+                          {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
 
 
 @login_required()
@@ -226,7 +226,29 @@ class bannedAuctions(View):
 
 
 def resolve(request):
-    pass
+    if request.method=="GET":
+        auctions = Auction.objects.filter(status="Active")
+        resolved_auction=Auction.objects.filter(status="Resolved")
+
+        list_bidding=[]
+        for auction in auctions:
+            delta = auction.deadline_date - datetime.now(timezone.utc)
+            if (delta.total_seconds() <= 0):
+                auction.status="Resolved"
+                auction.save()
+
+        for resolve_auction in resolved_auction:
+            bidding = Bidding.objects.filter(auction_id=resolve_auction.id).order_by('new_price').last()
+            if bidding is not None:
+              list_info={}
+              list_info['bidder']=bidding.bidder
+              list_info['new_price']=bidding.new_price
+              list_bidding.append(list_info)
+
+        print(list_bidding)
+
+        return  render(request,"resolve_auctions.html",{"auctions":resolved_auction,"biddings":list_bidding})
+
 
 
 

@@ -3,11 +3,11 @@
 {% block content %}
 
     <div align="center" >
-    <h1>List of Banned Auction</h1>
+    <h1>List of Banned Auctions</h1>
     <form method="get">
         {% csrf_token %}
     <div >
-        <table style="float: left;width: 80%;margin: 5px; border-style: inset;font-size: 24px">
+        <table style="float: left;width: 80%;margin: 5px; border-style: inset;font-size: 24px" rules="all">
             <tr >
                 <th style="font-weight: bold;border: 1px solid black">Title</th>
                 <th style="font-weight: bold;border: 1px solid black">Description</th>
