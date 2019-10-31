@@ -229,6 +229,7 @@ def resolve(request):
     pass
 
 
+
 def changeLanguage(request, lang_code):
     translation.activate(lang_code)
     request.session[translation.LANGUAGE_SESSION_KEY] = lang_code
