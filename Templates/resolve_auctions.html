@@ -1,19 +1,21 @@
-
 {% load i18n %}
 
 {% block content %}
 
-    <div align="center" >
+    <div align="center">
     <h1>List of Resolved Auctions</h1>
-    <div align="left" style="padding-left: 5px" class="button" >
-        <button type="button"  value="cancel" onclick="window.location.href='/'"><span>{% trans 'Go Back' %}</span>
+    <div align="left" style="padding-left: 5px" class="button">
+        <button type="button" value="cancel" onclick="window.location.href='/'"><span>{% trans 'Go Back' %}</span>
         </button>
+        <form action="#" method="get">
+            <input type="submit" class="btn" value="Json Format" name="mybtn">
+        </form>
     </div>
     <form method="get">
         {% csrf_token %}
-        <div >
-            <table style="float: left;width: 80%;margin: 5px; border-style: inset;font-size: 24px" rules="all">
-                <tr >
+        <div>
+            <table style="float: left;width: 100%;margin: 5px; border-style: inset;font-size: 24px" rules="all">
+                <tr>
                     <th style="font-weight: bold;border: 1px solid black">Title</th>
                     <th style="font-weight: bold;border: 1px solid black">Description</th>
                     <th style="font-weight: bold;border: 1px solid black">Started Price</th>
@@ -25,8 +27,9 @@
                     <th style="font-weight: bold;border: 1px solid black">Winning Price</th>
 
                 </tr>
-                {% for auction in auctions %}  {% for bidding in biddings %}
-                    <tr >
+                {% for auction,bidding in auctions %}
+
+                    <tr>
                         <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.title }}</th>
                         <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.description }}</th>
                         <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.minimum_price }}</th>
@@ -34,17 +37,16 @@
                         <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.deadline_date }}</th>
                         <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.status }}</th>
                         <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.hosted_by }}</th>
-
-
-                    <th style="font-weight: lighter;border-bottom-style: solid">{{ bidding.bidder }}</th>
-                    <th style="font-weight: lighter;border-bottom-style: solid">{{ bidding.new_price }}</th>
-
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ bidding.bidder|default:"None" }}</th>
+                        <th style="font-weight: lighter;border-bottom-style: solid">{{ bidding.new_price|default:"None" }}</th>
 
                     </tr>
 
-                {% endfor %}{% endfor %}
+                {% endfor %}
+
 
             </table>
+
         </div>
 
 

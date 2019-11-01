@@ -9,13 +9,14 @@ from .models import Auction, Bidding
 from django.urls import reverse
 from django.utils import translation
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import CreateAuctionForm, EditAuctionForm, Auction, BiddingForm
 from django.utils.translation import gettext as _
 from _datetime import datetime, timezone
 import requests
 
 url = 'https://api.exchangerate-api.com/v4/latest/EUR'
+
 
 def index(request):
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
@@ -118,14 +119,14 @@ class bid(View):
         bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
         biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
 
-        delta=auction.deadline_date-datetime.now(timezone.utc)
+        delta = auction.deadline_date - datetime.now(timezone.utc)
         if auction.status == "Banned":
             messages.info(request, "You can only bid on active auction")
             return render(request, "home.html", {"auctions": auctions})
         elif auction.hosted_by == request.user.username:
             messages.info(request, "You cannot bid on your own auctions")
             return render(request, "home.html", {"auctions": auctions})
-        elif delta.total_seconds()<=0:
+        elif delta.total_seconds() <= 0:
             messages.info(request, "You can only bid on active auction")
             return render(request, "home.html", {"auctions": auctions})
         else:
@@ -226,30 +227,53 @@ class bannedAuctions(View):
 
 
 def resolve(request):
-    if request.method=="GET":
+    if request.method == "GET":
         auctions = Auction.objects.filter(status="Active")
-        resolved_auction=Auction.objects.filter(status="Resolved")
+        resolved_auction = Auction.objects.filter(status="Resolved")
 
-        list_bidding=[]
+        list_bidding = []
         for auction in auctions:
             delta = auction.deadline_date - datetime.now(timezone.utc)
             if (delta.total_seconds() <= 0):
-                auction.status="Resolved"
+                auction.status = "Resolved"
                 auction.save()
 
         for resolve_auction in resolved_auction:
             bidding = Bidding.objects.filter(auction_id=resolve_auction.id).order_by('new_price').last()
+
+            ## Email to the Hosts
+            user = User.objects.get(username=resolve_auction.hosted_by)
+            subject = _("Resolved")
+            message2 = _("Hello Hosts, Your auctions were resolved ")
+            to_email2 = [user.email]
+            send_mail(subject, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+
+            ## Email to the Bidders
+
+            message = _("Hello bidders, The bidded auction was resolved ")
+
+            bidder = Bidding.objects.filter(auction_id=resolve_auction.id)
+            for bidders in bidder:
+                emails = User.objects.filter(username=bidders.bidder)
+                for email in emails:
+                    receipent_list = [email.email]
+                    send_mail(subject, message, 'no-reply@yaas.com', receipent_list, fail_silently=False)
+
             if bidding is not None:
-              list_info={}
-              list_info['bidder']=bidding.bidder
-              list_info['new_price']=bidding.new_price
-              list_bidding.append(list_info)
+                list_info = {}
+                list_info['bidder'] = bidding.bidder
+                list_info['new_price'] = bidding.new_price
+                list_bidding.append(list_info)
+            else:
+                list_bidding.append(None)
 
         print(list_bidding)
+        rows = zip(resolved_auction, list_bidding)
+        if (request.GET.get('mybtn')):
+            data = list(resolved_auction.values())
+            return JsonResponse({"resolved_auctions": data})
 
-        return  render(request,"resolve_auctions.html",{"auctions":resolved_auction,"biddings":list_bidding})
-
-
+        return render(request, "resolve_auctions.html", {"auctions": rows})
 
 
 def changeLanguage(request, lang_code):
@@ -276,11 +300,10 @@ def changeCurrency(request, currency_code):
     usd_rate = data["rates"][currency_code]
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
 
-
     for item in auctions:
         new_pris = round(float(item.minimum_price) * usd_rate, 2)
         item.minimum_price = new_pris
 
-    messages.info(request,"Currency has been changed to "+currency_code)
+    messages.info(request, "Currency has been changed to " + currency_code)
 
     return render(request, "home.html", {'auctions': auctions})

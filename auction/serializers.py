@@ -15,3 +15,4 @@ class BidSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+

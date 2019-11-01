@@ -1206,8 +1206,8 @@ class WS2_BidAuctionApiTests(TestCase):
         data = {
             "new_price": 12
         }
-        self.client.post(reverse("signin"), self.user2Info)
         self.client.post(reverse("signup"), self.user2Info)
+        self.client.post(reverse("signin"), self.user2Info)
         self.client.force_authenticate(user=auth.get_user(self.client))
 
         response = self.client.post(reverse("bidauctionapi", args=(self.banned_item_id,)), data)
