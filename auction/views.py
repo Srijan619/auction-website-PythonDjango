@@ -13,7 +13,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import CreateAuctionForm, EditAuctionForm, Auction, BiddingForm
 from django.utils.translation import gettext as _
 from _datetime import datetime, timezone
+from django.core.serializers.json import DjangoJSONEncoder
 import requests
+import json
 
 url = 'https://api.exchangerate-api.com/v4/latest/EUR'
 
@@ -72,7 +74,7 @@ class CreateAuction(View):
 
 
         else:
-            print("Invalid date")
+           
             return render(request, "create_auction.html", {"form": form})
 
 
@@ -231,7 +233,6 @@ def resolve(request):
         auctions = Auction.objects.filter(status="Active")
         resolved_auction = Auction.objects.filter(status="Resolved")
 
-        list_bidding = []
         for auction in auctions:
             delta = auction.deadline_date - datetime.now(timezone.utc)
             if (delta.total_seconds() <= 0):
@@ -259,21 +260,11 @@ def resolve(request):
                     receipent_list = [email.email]
                     send_mail(subject, message, 'no-reply@yaas.com', receipent_list, fail_silently=False)
 
-            if bidding is not None:
-                list_info = {}
-                list_info['bidder'] = bidding.bidder
-                list_info['new_price'] = bidding.new_price
-                list_bidding.append(list_info)
-            else:
-                list_bidding.append(None)
 
-        print(list_bidding)
-        rows = zip(resolved_auction, list_bidding)
-        if (request.GET.get('mybtn')):
-            data = list(resolved_auction.values())
-            return JsonResponse({"resolved_auctions": data})
 
-        return render(request, "resolve_auctions.html", {"auctions": rows})
+        data = list(resolved_auction.values())
+
+        return JsonResponse({"resolved_auctions": [d['title'] for d in data]})
 
 
 def changeLanguage(request, lang_code):

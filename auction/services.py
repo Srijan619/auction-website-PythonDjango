@@ -71,12 +71,6 @@ class BidAuctionApi(APIView):
                 biddings is not None and (float(biddings.new_price)) >= float(data["new_price"]))):
             return Response({'message': "New bid must be greater than the current bid at least 0.01"}, status=400)
         elif serializer.is_valid():
-          #  data = {}
-
-            # data['new_price'] = data
-            # data['hosted_by'] = auction.hosted_by
-            #  data['bidder'] = request.user.username
-            # data['bid_time'] = datetime.now(timezone.utc)
             serializer.save()
             return Response({'message': "Bid successfully", 'title':auction.title,'current_price':data['new_price']}, status=200)
 

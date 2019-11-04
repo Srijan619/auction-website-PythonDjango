@@ -27,7 +27,7 @@ SECRET_KEY = '9ab)#s(z-)5gesi5!%5+k8ha4p#vom8k0ma%51-ml^0!l&c!a#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','192.168.10.57']
+ALLOWED_HOSTS = []
 
 # Application definition
 PREREQ_APPS = [
