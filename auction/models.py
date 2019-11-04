@@ -21,6 +21,7 @@ class Bidding(models.Model):
     hosted_by=models.CharField(max_length=45, default="")
     bidder= models.CharField(max_length=45, default="")
     bid_time=models.DateTimeField(auto_now_add=True)
+    bid_version = models.IntegerField(default=0)
 
     def __str__(self):
         return self.new_price
