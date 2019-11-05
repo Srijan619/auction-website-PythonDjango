@@ -17,7 +17,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import requests
 import json
 
-current_bid_version=0
+current_bid_version = 0
 url = 'https://api.exchangerate-api.com/v4/latest/EUR'
 
 
@@ -62,8 +62,8 @@ class CreateAuction(View):
                                                      deadline_date=cd["deadline_date"], hosted_by=hosted_by)
 
                 new_auction.save()
-                subject = _("Auction created")
-                message = _("Thank you for creating an auction. Below link provides to modify the auction details.")
+                subject = ("Auction created")
+                message = ("Thank you for creating an auction. Below link provides to modify the auction details.")
                 to_email = [request.user.email]
 
                 send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
@@ -131,8 +131,8 @@ class bid(View):
             current_bid_version = biddings.bid_version
             request.session['value_bid'] = current_bid_version
         else:
-            current_bid_version=1
-            request.session['value_bid']=current_bid_version
+            current_bid_version = 1
+            request.session['value_bid'] = current_bid_version
 
         if auction.status == "Banned":
             messages.info(request, "You can only bid on active auction")
@@ -155,13 +155,6 @@ class bid(View):
         bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
         delta = auction.deadline_date - datetime.now(timezone.utc)
         form = BiddingForm(request.POST)
-        print(request.session.get('value'))
-        print(auction.version)
-
-
-        print(request.session.get('value_bid'))
-        current_bid_version=request.session.get('value_bid')
-        print(current_bid_version)
 
         if form.is_valid():
             cd = form.cleaned_data
@@ -178,50 +171,37 @@ class bid(View):
             elif ((biddings is None and (float(auction.minimum_price)) < new_price) or (
                     biddings is not None and (float(biddings.new_price)) < new_price)):
 
+                bids = Bidding.objects.create(new_price=new_price, hosted_by=auction.hosted_by,
+                                              bidder=request.user.username, auction=auction)
 
-                if (request.session.get('value') == auction.version and request.session.get(
-                        'value_bid') == current_bid_version):
+                bids.save()
 
-                    bids = Bidding.objects.create(new_price=new_price, hosted_by=auction.hosted_by,
-                                              bidder=request.user.username, auction=auction,
-                                              bid_version=current_bid_version)
-                    current_bid_version = current_bid_version + 1
-                    biddings.bid_version = current_bid_version
+                ## Email to the bidder
+                subject = _("Bid Successful")
+                message = _("Thank you for bidding  an auction. You will be notified of the situation.")
+                to_email = [request.user.email]
 
-                    bids.save()
+                send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
 
+                ## Email to the Host
+                user = User.objects.get(username=auction.hosted_by)
+                subject2 = _("New bidder")
+                message2 = _("Hello, There was a new bid by " + request.user.username)
+                to_email2 = [user.email]
 
-                    ## Email to the bidder
-                    subject = _("Bid Successful")
-                    message = _("Thank you for bidding  an auction. You will be notified of the situation.")
-                    to_email = [request.user.email]
+                send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
 
-                    send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
-
-                    ## Email to the Host
-                    user = User.objects.get(username=auction.hosted_by)
-                    subject2 = _("New bidder")
-                    message2 = _("Hello, There was a new bid by " + request.user.username)
-                    to_email2 = [user.email]
-
-                    send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
-
-                    messages.info(request, "You has bid successfully")
-                    return HttpResponseRedirect(reverse('auction:index'))
-                else:
-                    messages.info(request,
-                                  "You do not have the latest description of the auction, please refresh and bid again ")
+                messages.info(request, "You has bid successfully")
                 return HttpResponseRedirect(reverse('auction:index'))
+
             else:
                 messages.info(request, "New bid must be greater than the current bid for at least 0.01")
                 return render(request, "bid_auction.html",
-                                  {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
+                              {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
 
         else:
-          return render(request, "bid_auction.html",
-                      {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
-
-
+            return render(request, "bid_auction.html",
+                          {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
 
 
 @login_required()

@@ -10,7 +10,6 @@ from django.template.loader import render_to_string, get_template
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import update_session_auth_hash
 
-from .models import Account
 
 
 class SignUp(View):

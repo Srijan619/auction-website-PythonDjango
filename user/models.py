@@ -1,6 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class Account(models.Model):
-    username=models.CharField(max_length=20)
-    password=models.CharField(max_length=256)
-    email= models.CharField(max_length=100)
+class UserLanguage(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    language_code=models.CharField(max_length=45, default="en")
