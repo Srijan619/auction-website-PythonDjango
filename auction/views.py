@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.shortcuts import render, get_object_or_404
 from .models import Auction, Bidding
+from user.models import UserLanguage
 from django.urls import reverse
 from django.utils import translation
 from django.contrib.auth.models import User
@@ -18,7 +19,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import requests
 import json
 
-current_bid_version = 0
+
 url = 'https://api.exchangerate-api.com/v4/latest/EUR'
 
 
@@ -124,11 +125,11 @@ class EditAuction(View):
 @method_decorator(login_required, name="dispatch")
 class bid(View):
     def get(self, request, item_id):
-        #response = requests.get(url)
-        #data = response.json()
+        response = requests.get(url)
+        data = response.json()
 
         # Your JSON object
-        #usd_rate = data["rates"][request.session.get('currency_code')]
+        usd_rate = data["rates"][request.session.get('currency_code')]
 
         auction = Auction.objects.get(id=item_id)
         auctions = Auction.objects.filter(status="Active")
@@ -136,13 +137,14 @@ class bid(View):
         biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
 
         # Converting auction price to usd and vice versa
-        #new_pris = round(float(auction.minimum_price) * usd_rate, 2)
-        #auction.minimum_price = new_pris
+        new_pris = round(float(auction.minimum_price) * usd_rate, 2)
+        auction.minimum_price = new_pris
 
 
 
         delta = auction.deadline_date - datetime.now(timezone.utc)
-        current_version = auction.version
+
+        current_version=auction.version
         request.session['value'] = current_version
 
         if auction.status == "Banned":
@@ -160,64 +162,67 @@ class bid(View):
                           {"form": form, "auction": auction, "biddings": biddings, "bidding_all": bidding_all})
 
 
-def post(self, request, item_id):
-    auction = Auction.objects.get(id=item_id)
-    auctions = Auction.objects.filter(status="Active").order_by('-created_date')
-    biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
-    bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
-    delta = auction.deadline_date - datetime.now(timezone.utc)
-    form = BiddingForm(request.POST)
-    if (request.session.get('value') == auction.version):
-        if form.is_valid():
-            cd = form.cleaned_data
-            new_price = cd['new_price']
-            if auction.status == "Banned":
-                messages.info(request, "You can only bid on active auction")
-                return render(request, "home.html", {"auctions": auctions})
-            elif auction.hosted_by == request.user.username:
-                messages.info(request, "You cannot bid on your own auctions")
-                return render(request, "home.html", {"auctions": auctions})
-            elif delta.total_seconds() <= 0:
-                messages.info(request, "You can only bid on active auction")
-                return render(request, "home.html", {"auctions": auctions})
-            elif ((biddings is None and (float(auction.minimum_price)) < new_price) or (
-                    biddings is not None and (float(biddings.new_price)) < new_price)):
+    def post(self, request, item_id):
+        auction = Auction.objects.get(id=item_id)
+        auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+        biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
+        bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
+        delta = auction.deadline_date - datetime.now(timezone.utc)
+        form = BiddingForm(request.POST)
+        if request.session.get('value') is None:
+            request.session['value']=0
+        if (request.session.get('value') == auction.version): #Checking concurrent sessions
+            if form.is_valid():
+                cd = form.cleaned_data
+                new_price = cd['new_price']
+                if auction.status == "Banned":
+                    messages.info(request, "You can only bid on active auction")
+                    return render(request, "home.html", {"auctions": auctions})
+                elif auction.hosted_by == request.user.username:
+                    messages.info(request, "You cannot bid on your own auctions")
+                    return render(request, "home.html", {"auctions": auctions})
+                elif delta.total_seconds() <= 0:
+                    messages.info(request, "You can only bid on active auction")
+                    return render(request, "home.html", {"auctions": auctions})
+                elif ((biddings is None and (float(auction.minimum_price)) < new_price) or (
+                        biddings is not None and (float(biddings.new_price)) < new_price)):
 
-                bids = Bidding.objects.create(new_price=new_price, hosted_by=auction.hosted_by,
-                                              bidder=request.user.username, auction=auction)
+                    bids = Bidding.objects.create(new_price=new_price, hosted_by=auction.hosted_by,
+                                                  bidder=request.user.username, auction=auction)
 
-                bids.save()
+                    bids.save()
 
-                ## Email to the bidder
-                subject = _("Bid Successful")
-                message = _("Thank you for bidding  an auction. You will be notified of the situation.")
-                to_email = [request.user.email]
+                    ## Email to the bidder
+                    subject = _("Bid Successful")
+                    message = _("Thank you for bidding  an auction. You will be notified of the situation.")
+                    to_email = [request.user.email]
 
-                send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
+                    send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
 
-                ## Email to the Host
-                user = User.objects.get(username=auction.hosted_by)
-                subject2 = _("New bidder")
-                message2 = _("Hello, There was a new bid by " + request.user.username)
-                to_email2 = [user.email]
+                    ## Email to the Host
+                    user = User.objects.get(username=auction.hosted_by)
+                    subject2 = _("New bidder")
+                    message2 = _("Hello, There was a new bid by " + request.user.username)
+                    to_email2 = [user.email]
 
-                send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+                    send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
 
-                messages.info(request, "You has bid successfully")
-                return HttpResponseRedirect(reverse('auction:index'))
+                    messages.info(request, "You has bid successfully")
+                    return HttpResponseRedirect(reverse('auction:index'))
+
+                else:
+                    messages.info(request, "New bid must be greater than the current bid for at least 0.01")
+                    return render(request, "bid_auction.html",
+                                  {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
 
             else:
-                messages.info(request, "New bid must be greater than the current bid for at least 0.01")
                 return render(request, "bid_auction.html",
                               {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
 
         else:
+            messages.info(request, "You dont have latest information from the auction")
             return render(request, "bid_auction.html",
                           {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
-
-    else:
-        messages.info(request, "You dont have latest information from the auction")
-        return HttpResponseRedirect(reverse('auction:index'))
 
 
 @login_required()
@@ -359,7 +364,9 @@ class generateData(View):
                 print(minimum_price)
                 hosted_by = username
                 user = User.objects.create_user(username=username, password=password, email=email)
+                language=UserLanguage.objects.create(language="en")
                 user.save()
+                language.save()
 
                 new_auction = Auction.objects.create(title=title, description=description,
                                                      minimum_price=minimum_price,
