@@ -17,6 +17,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import requests
 import json
 
+current_bid_version=0
 url = 'https://api.exchangerate-api.com/v4/latest/EUR'
 
 
@@ -87,7 +88,7 @@ class EditAuction(View):
             print(request.user.username)
             print(auction.id)
             form = EditAuctionForm()
-
+            auction.version = 1
             return render(request, "edit_auction.html", {"form": form})
         else:
             messages.info(request, "That is not your auction to edit")
@@ -124,11 +125,14 @@ class bid(View):
         biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
 
         delta = auction.deadline_date - datetime.now(timezone.utc)
-
-        current_bid_version=biddings.bid_version
         current_version = auction.version
         request.session['value'] = current_version
-        request.session['value_bid'] = current_bid_version
+        if biddings is not None:
+            current_bid_version = biddings.bid_version
+            request.session['value_bid'] = current_bid_version
+        else:
+            current_bid_version=1
+            request.session['value_bid']=current_bid_version
 
         if auction.status == "Banned":
             messages.info(request, "You can only bid on active auction")
@@ -151,28 +155,41 @@ class bid(View):
         bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
         delta = auction.deadline_date - datetime.now(timezone.utc)
         form = BiddingForm(request.POST)
-        print(request.session['value'])
-        if (request.session['value'] == auction.version and request.session['value_bid']==biddings.bid_version):
-            if form.is_valid():
-                cd = form.cleaned_data
-                new_price = cd['new_price']
-                if auction.status == "Banned":
-                    messages.info(request, "You can only bid on active auction")
-                    return render(request, "home.html", {"auctions": auctions})
-                elif auction.hosted_by == request.user.username:
-                    messages.info(request, "You cannot bid on your own auctions")
-                    return render(request, "home.html", {"auctions": auctions})
-                elif delta.total_seconds() <= 0:
-                    messages.info(request, "You can only bid on active auction")
-                    return render(request, "home.html", {"auctions": auctions})
-                elif ((biddings is None and (float(auction.minimum_price)) < new_price) or (
-                        biddings is not None and (float(biddings.new_price)) < new_price)):
-                    biddings.bid_version = biddings.bid_version + 1
+        print(request.session.get('value'))
+        print(auction.version)
+
+
+        print(request.session.get('value_bid'))
+        current_bid_version=request.session.get('value_bid')
+        print(current_bid_version)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            new_price = cd['new_price']
+            if auction.status == "Banned":
+                messages.info(request, "You can only bid on active auction")
+                return render(request, "home.html", {"auctions": auctions})
+            elif auction.hosted_by == request.user.username:
+                messages.info(request, "You cannot bid on your own auctions")
+                return render(request, "home.html", {"auctions": auctions})
+            elif delta.total_seconds() <= 0:
+                messages.info(request, "You can only bid on active auction")
+                return render(request, "home.html", {"auctions": auctions})
+            elif ((biddings is None and (float(auction.minimum_price)) < new_price) or (
+                    biddings is not None and (float(biddings.new_price)) < new_price)):
+
+
+                if (request.session.get('value') == auction.version and request.session.get(
+                        'value_bid') == current_bid_version):
 
                     bids = Bidding.objects.create(new_price=new_price, hosted_by=auction.hosted_by,
-                                                  bidder=request.user.username, auction=auction, bid_version=biddings.bid_version)
-                    biddings.bid_version=biddings.bid_version+1
+                                              bidder=request.user.username, auction=auction,
+                                              bid_version=current_bid_version)
+                    current_bid_version = current_bid_version + 1
+                    biddings.bid_version = current_bid_version
+
                     bids.save()
+
 
                     ## Email to the bidder
                     subject = _("Bid Successful")
@@ -192,17 +209,19 @@ class bid(View):
                     messages.info(request, "You has bid successfully")
                     return HttpResponseRedirect(reverse('auction:index'))
                 else:
-                    messages.info(request, "New bid must be greater than the current bid for at least 0.01")
-                    return render(request, "bid_auction.html",
+                    messages.info(request,
+                                  "You do not have the latest description of the auction, please refresh and bid again ")
+                return HttpResponseRedirect(reverse('auction:index'))
+            else:
+                messages.info(request, "New bid must be greater than the current bid for at least 0.01")
+                return render(request, "bid_auction.html",
                                   {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
 
-            else:
-                return render(request, "bid_auction.html",
-                              {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
-
         else:
-            messages.info(request, "You do not have the latest description of the auction, please refresh and bid again ")
-            return HttpResponseRedirect(reverse('auction:index'))
+          return render(request, "bid_auction.html",
+                      {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
+
+
 
 
 @login_required()
