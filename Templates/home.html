@@ -12,6 +12,8 @@
                     onclick="window.location.href='/auction/banned'"><span>{% trans 'Banned Auction' %}</span></button>
              <button type="button" style="width: 120px;height: 28px" class="button" value="resolve_auction"
                     onclick="window.location.href='/auction/resolve'"><span>{% trans 'Resolve Auction' %}</span></button>
+            <button type="button" style="width: 120px;height: 28px" class="button" value="generate_data"
+                    onclick="window.location.href='/auction/generate'"><span>{% trans 'Random data' %}</span></button>
         {% endif %}
             <button type="button" style="width: 120px;height: 28px" class="button" value="create_auction"
                     onclick="window.location.href='/auction/create'"><span>{% trans 'Create Auction' %}</span></button>
@@ -86,7 +88,7 @@
                             </li>
                             <hr>
                             <li>
-                                <p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{ auction.minimum_price }} {% trans '€' %}
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{ auction.minimum_price }}
                             </li>
                             <hr>
                             <li>

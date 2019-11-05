@@ -4,11 +4,13 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpRespon
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
+from django.utils import translation
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.template.loader import render_to_string, get_template
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import update_session_auth_hash
+from .models import UserLanguage
 
 
 
@@ -34,14 +36,17 @@ class SignUp(View):
                 messages.info(request, "This email has been taken")
                 return render(request, "sign_up.html")
             else:
+                print(request.session.get('ln'))
                 user = User.objects.create_user(username=username, password=password, email=email)
+                language=UserLanguage.objects.create(language=request.session.get('ln'), user=user)
+                language.save()
                 user.save()
                 return HttpResponseRedirect(reverse('signin'))
 
 
 class SignIn(View):
     def get(self, request):
-        print("Get_request")
+
         return render(request, "log_in.html")
 
     def post(self, request):
@@ -49,9 +54,13 @@ class SignIn(View):
         password = request.POST.get('password', '')
 
         user = auth.authenticate(username=username, password=password)
+
         if username != "" and password != "":
             if user is not None and user.is_active:
                 auth.login(request, user)
+                language = UserLanguage.objects.get(user_id=request.user.id)
+                translation.activate(language.language)
+                request.session[translation.LANGUAGE_SESSION_KEY] = language.language
                 print("User found")
                 return redirect('/')
             else:

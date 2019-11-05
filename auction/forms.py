@@ -20,3 +20,6 @@ class EditAuctionForm(forms.Form):
 
 class BiddingForm(forms.Form):
     new_price=forms.FloatField(label="Bid Price", min_value=0.01)
+
+class GenerateData(forms.Form):
+    auction_amount=forms.IntegerField(label="Amount of users and Auctions")

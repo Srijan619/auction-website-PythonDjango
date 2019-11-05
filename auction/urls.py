@@ -12,6 +12,8 @@ urlpatterns = [
     re_path(r'^ban/(\d+)$', views.ban, name='ban'),
     path('resolve/', views.resolve, name='resolve'),
     path('banned/', views.bannedAuctions.as_view(), name="banned"),
+    path('generate/', views.generateData.as_view(), name="generate"),
+
 
 
 ]

@@ -10,9 +10,10 @@ from django.urls import reverse
 from django.utils import translation
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import CreateAuctionForm, EditAuctionForm, Auction, BiddingForm
+from .forms import CreateAuctionForm, EditAuctionForm, Auction, BiddingForm, GenerateData
 from django.utils.translation import gettext as _
 from _datetime import datetime, timezone
+from faker import Faker
 from django.core.serializers.json import DjangoJSONEncoder
 import requests
 import json
@@ -22,6 +23,8 @@ url = 'https://api.exchangerate-api.com/v4/latest/EUR'
 
 
 def index(request):
+    request.session['ln'] = "en"
+    request.session['currency_code'] = "EUR"
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
     return render(request, "home.html", {"auctions": auctions})
 
@@ -63,10 +66,12 @@ class CreateAuction(View):
 
                 new_auction.save()
                 subject = ("Auction created")
-                message = ("Thank you for creating an auction. Below link provides to modify the auction details.")
+                message = (
+                            "Thank you for creating an auction. Below link provides to modify the auction details." + " ")
+                link = "http://127.0.0.1:8000/auction/edit/" + str(new_auction.id)
                 to_email = [request.user.email]
 
-                send_mail(subject, message, 'no-reply@yaas.com', to_email, fail_silently=False)
+                send_mail(subject, message + link, 'no-reply@yaas.com', to_email, fail_silently=False)
                 messages.info(request, _("Auction has been created successfully, check your emails"))
                 return HttpResponseRedirect(reverse("auction:index"))
             else:
@@ -119,20 +124,26 @@ class EditAuction(View):
 @method_decorator(login_required, name="dispatch")
 class bid(View):
     def get(self, request, item_id):
+        #response = requests.get(url)
+        #data = response.json()
+
+        # Your JSON object
+        #usd_rate = data["rates"][request.session.get('currency_code')]
+
         auction = Auction.objects.get(id=item_id)
         auctions = Auction.objects.filter(status="Active")
         bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
         biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
 
+        # Converting auction price to usd and vice versa
+        #new_pris = round(float(auction.minimum_price) * usd_rate, 2)
+        #auction.minimum_price = new_pris
+
+
+
         delta = auction.deadline_date - datetime.now(timezone.utc)
         current_version = auction.version
         request.session['value'] = current_version
-        if biddings is not None:
-            current_bid_version = biddings.bid_version
-            request.session['value_bid'] = current_bid_version
-        else:
-            current_bid_version = 1
-            request.session['value_bid'] = current_bid_version
 
         if auction.status == "Banned":
             messages.info(request, "You can only bid on active auction")
@@ -148,14 +159,15 @@ class bid(View):
             return render(request, "bid_auction.html",
                           {"form": form, "auction": auction, "biddings": biddings, "bidding_all": bidding_all})
 
-    def post(self, request, item_id):
-        auction = Auction.objects.get(id=item_id)
-        auctions = Auction.objects.filter(status="Active").order_by('-created_date')
-        biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
-        bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
-        delta = auction.deadline_date - datetime.now(timezone.utc)
-        form = BiddingForm(request.POST)
 
+def post(self, request, item_id):
+    auction = Auction.objects.get(id=item_id)
+    auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+    biddings = Bidding.objects.filter(auction_id=item_id).order_by('new_price').last()
+    bidding_all = Bidding.objects.filter(auction_id=item_id).order_by('-new_price')
+    delta = auction.deadline_date - datetime.now(timezone.utc)
+    form = BiddingForm(request.POST)
+    if (request.session.get('value') == auction.version):
         if form.is_valid():
             cd = form.cleaned_data
             new_price = cd['new_price']
@@ -202,6 +214,10 @@ class bid(View):
         else:
             return render(request, "bid_auction.html",
                           {"form": form, "auction": auction, "bidding_all": bidding_all, "biddings": biddings})
+
+    else:
+        messages.info(request, "You dont have latest information from the auction")
+        return HttpResponseRedirect(reverse('auction:index'))
 
 
 @login_required()
@@ -286,8 +302,10 @@ def changeLanguage(request, lang_code):
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
 
     if lang_code == "en":
+        request.session['ln'] = lang_code
         messages.info(request, "Language has been changed to English ")
     elif lang_code == "sv":
+        request.session['ln'] = lang_code
         messages.info(request, _("Language has been changed to Swedish "))
     else:
         messages.info(request, _("Language not selected"))
@@ -302,6 +320,7 @@ def changeCurrency(request, currency_code):
     # Your JSON object
     usd_rate = data["rates"][currency_code]
     auctions = Auction.objects.filter(status="Active").order_by('-created_date')
+    request.session['currency_code'] = currency_code
 
     for item in auctions:
         new_pris = round(float(item.minimum_price) * usd_rate, 2)
@@ -310,3 +329,44 @@ def changeCurrency(request, currency_code):
     messages.info(request, "Currency has been changed to " + currency_code)
 
     return render(request, "home.html", {'auctions': auctions})
+
+@method_decorator(login_required, name="dispatch")
+class generateData(View):
+    def get(self, request):
+        form = GenerateData()
+        return render(request, "generate_data.html", {"form": form})
+
+    def post(self, request):
+        form = GenerateData(request.POST)
+        fake = Faker()
+        fake.unique_mode = True
+        if form.is_valid():
+            cd = form.cleaned_data
+            auction_amount = cd['auction_amount']
+            for _ in range(0, auction_amount):
+                username = fake.first_name()
+                print(username)
+                email = fake.email()
+                print(email)
+                password = fake.last_name()
+                print(password)
+                title = fake.sentence(nb_words=4)
+
+                description = fake.sentence(nb_words=10)
+                deadline_date = fake.date_time_between(start_date="+4d", end_date="+30d", tzinfo=None)
+                print(deadline_date)
+                minimum_price = fake.year()
+                print(minimum_price)
+                hosted_by = username
+                user = User.objects.create_user(username=username, password=password, email=email)
+                user.save()
+
+                new_auction = Auction.objects.create(title=title, description=description,
+                                                     minimum_price=minimum_price,
+                                                     deadline_date=deadline_date, hosted_by=hosted_by)
+
+                new_auction.save()
+
+            messages.info(request, "Random users and auctions created")
+            return HttpResponseRedirect(reverse("auction:index"))
+
