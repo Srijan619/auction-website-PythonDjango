@@ -49,18 +49,20 @@ class BidAuctionApi(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, id):
-        bid = Bidding.objects.filter(auction_id=id)
-        serializer = BidSerializer(bid, many=True)
+        auction = Auction.objects.get(id=id, status="Active")
+        serializer = AucSerializer(auction)
         return Response(serializer.data, status=200)
 
     def post(self, request, id):
 
+        bidding_serializer = Bidding()
         biddings = Bidding.objects.filter(auction_id=id).order_by('new_price').last()
 
         auction = Auction.objects.get(id=id)
 
         data = request.data
-        serializer = BidSerializer(biddings, data=data)
+
+        serializer = BidSerializer(bidding_serializer, data=data)
         if auction.hosted_by == request.user.username:
             return Response({'message': "Cannot bid on own auction"}, status=400)
         elif auction.status == "Banned":
@@ -71,8 +73,11 @@ class BidAuctionApi(APIView):
                 biddings is not None and (float(biddings.new_price)) >= float(data["new_price"]))):
             return Response({'message': "New bid must be greater than the current bid at least 0.01"}, status=400)
         elif serializer.is_valid():
-            serializer.save()
 
+            serializer.validated_data['hosted_by']= auction.hosted_by
+            serializer.validated_data['bidder']= request.user.username
+            serializer.validated_data['auction_id']= auction.id
+            serializer.save()
 
             ## Email to the bidder
             subject = _("Bid Successful")
@@ -88,8 +93,8 @@ class BidAuctionApi(APIView):
             to_email2 = [user.email]
 
             send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
-            return Response({'message': "Bid successfully", 'title': auction.title, 'current_price': int(data['new_price'])},
-                            status=200)
+            return Response(
+                {'message': "Bid successfully", 'title': auction.title, 'current_price': float(data['new_price'])},
+                status=200)
         else:
             return Response(serializer.errors, status=400)
-

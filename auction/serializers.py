@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, request
 from auction.models import Auction, Bidding
 
 
@@ -13,6 +13,7 @@ class BidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bidding
         fields = '__all__'
+
 
 
 

@@ -269,32 +269,44 @@ def resolve(request):
         auctions = Auction.objects.filter(status="Active")
         resolved_auction = Auction.objects.filter(status="Resolved")
 
-        for auction in auctions:
-            delta = auction.deadline_date - datetime.now(timezone.utc)
-            if (delta.total_seconds() <= 0):
-                auction.status = "Resolved"
-                auction.save()
+        if auctions is not None:
+            for auction in auctions:
+                delta = auction.deadline_date - datetime.now(timezone.utc)
+                if (delta.total_seconds() <= 0):
+                    auction.status = "Resolved"
+                    auction.save()
 
-        for resolve_auction in resolved_auction:
-            bidding = Bidding.objects.filter(auction_id=resolve_auction.id).order_by('new_price').last()
 
-            ## Email to the Hosts
-            user = User.objects.get(username=resolve_auction.hosted_by)
-            subject = _("Resolved")
-            message2 = _("Hello Hosts, Your auctions were resolved ")
-            to_email2 = [user.email]
-            send_mail(subject, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+            for resolve_auction in resolved_auction:
+                bidding = Bidding.objects.filter(auction_id=resolve_auction.id).order_by('new_price').last()
+                if bidding is not None:
+                    user = User.objects.get(username=resolve_auction.hosted_by)
 
-            ## Email to the Bidders
+                    ## Email to the Winner
 
-            message = _("Hello bidders, The bidded auction was resolved ")
+                    bidder_winner=User.objects.get(username=bidding.bidder)
+                    subject_w = _("Winner")
+                    message3 = _("Hello bidder, You won the auction. ")
+                    to_email3 = [bidder_winner.email]
+                    send_mail(subject_w, message3, 'no-reply@yaas.com', to_email3, fail_silently=False)
 
-            bidder = Bidding.objects.filter(auction_id=resolve_auction.id)
-            for bidders in bidder:
-                emails = User.objects.filter(username=bidders.bidder)
-                for email in emails:
-                    receipent_list = [email.email]
-                    send_mail(subject, message, 'no-reply@yaas.com', receipent_list, fail_silently=False)
+
+                    ## Email to the Hosts
+                    subject = _("Resolved")
+                    message2 = _("Hello Hosts, Your auctions were resolved ")
+                    to_email2 = [user.email]
+                    send_mail(subject, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+
+                    ## Email to the remaining Bidders
+
+                    message = _("Hello bidders, The bidded auction was resolved ")
+
+                    bidder = Bidding.objects.filter(auction_id=resolve_auction.id)
+                    for bidders in bidder:
+                        emails = User.objects.filter(username=bidders.bidder)
+                        for email in emails:
+                            receipent_list = [email.email]
+                            send_mail(subject, message, 'no-reply@yaas.com', receipent_list, fail_silently=False)
 
         data = list(resolved_auction.values())
 
