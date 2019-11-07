@@ -68,11 +68,12 @@ class CreateAuction(View):
                 new_auction.save()
                 subject = ("Auction created")
                 message = (
-                            "Thank you for creating an auction. Below link provides to modify the auction details." + " ")
+                        "Thank you for creating an auction. Below link provides to modify the auction details." + " ")
                 link = "http://127.0.0.1:8000/auction/edit/" + str(new_auction.id)
                 to_email = [request.user.email]
 
                 send_mail(subject, message + link, 'no-reply@yaas.com', to_email, fail_silently=False)
+
                 messages.info(request, _("Auction has been created successfully, check your emails"))
                 return HttpResponseRedirect(reverse("auction:index"))
             else:
@@ -140,8 +141,6 @@ class bid(View):
         new_pris = round(float(auction.minimum_price) * usd_rate, 2)
         auction.minimum_price = new_pris
 
-
-
         delta = auction.deadline_date - datetime.now(timezone.utc)
 
         current_version=auction.version
@@ -207,6 +206,7 @@ class bid(View):
 
                     send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
 
+
                     messages.info(request, "You has bid successfully")
                     return HttpResponseRedirect(reverse('auction:index'))
 
@@ -229,9 +229,10 @@ class bid(View):
 def ban(request, item_id):
     if request.user.is_superuser:
         auction = Auction.objects.get(id=item_id)
-        biddings = Bidding.objects.filter(auction_id=item_id)
+
         auction.status = "Banned"
         auction.save()
+
 
         ## Email to the Host
         user = User.objects.get(username=auction.hosted_by)

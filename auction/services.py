@@ -72,7 +72,7 @@ class BidAuctionApi(APIView):
             return Response({'message': "New bid must be greater than the current bid at least 0.01"}, status=400)
         elif serializer.is_valid():
             serializer.save()
-            return Response({'message': "Bid successfully", 'title':auction.title,'current_price':data['new_price']}, status=200)
+
 
             ## Email to the bidder
             subject = _("Bid Successful")
@@ -88,6 +88,8 @@ class BidAuctionApi(APIView):
             to_email2 = [user.email]
 
             send_mail(subject2, message2, 'no-reply@yaas.com', to_email2, fail_silently=False)
+            return Response({'message': "Bid successfully", 'title': auction.title, 'current_price': int(data['new_price'])},
+                            status=200)
         else:
             return Response(serializer.errors, status=400)
 

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ba8ca1cb-8d2a-4aa9-83db-b2cafdfc0f87" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="Django default" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="Django default" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="CSS File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="ProjectId" id="1R0TLRVBOvSLbFocVuiTOo4JiSA" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Templates" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\PuuCee\OneDrive - Åbo Akademi O365\Server side development\yaas-project-2019-Srijan619\Templates" />
+      <recent name="C:\Users\srijan\OneDrive - Åbo Akademi O365\Server side development\yaas-project-2019-Srijan619\Templates" />
+      <recent name="C:\Users\srijan\OneDrive - Åbo Akademi O365\Server side development\yaas-project-2019-Srijan619\auction" />
+      <recent name="C:\Users\srijan\OneDrive - Åbo Akademi O365\Server side development\yaas-project-2019-Srijan619\static" />
+      <recent name="C:\Users\srijan\OneDrive - Åbo Akademi O365\Server side development\yaas-project-2019-Srijan619" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Django server.yaas-project-2019-Srijan619">
+    <configuration name="Test: yaas.test" type="DjangoTestsConfigurationType" temporary="true">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.test" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test: yaas.test.LanguageTest" type="DjangoTestsConfigurationType" temporary="true">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.test.LanguageTest" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test: yaas.test.LanguageTest.test_store_language" type="DjangoTestsConfigurationType" temporary="true">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.test.LanguageTest.test_store_language" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test: yaas.testsTDD" type="DjangoTestsConfigurationType">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.testsTDD" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test: yaas.testsTDD.UC1_SignUpTests.test_sign_up_with_valid_data" type="DjangoTestsConfigurationType">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.testsTDD.UC1_SignUpTests.test_sign_up_with_valid_data" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test: yaas.testsTDD.UC6_BidAuctionTests" type="DjangoTestsConfigurationType" temporary="true">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.testsTDD.UC6_BidAuctionTests" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test: yaas.testsTDD.WS2_BidAuctionApiTests.test_bid_successfully" type="DjangoTestsConfigurationType" temporary="true">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="yaas.testsTDD.WS2_BidAuctionApiTests.test_bid_successfully" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="yaas-project-2019-Srijan619" type="Python.DjangoServer" factoryName="Django server">
+      <module name="yaas-project-2019-Srijan619" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="yaas.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Django tests.Test: yaas.test.LanguageTest.test_store_language" />
+        <item itemvalue="Django tests.Test: yaas.test" />
+        <item itemvalue="Django tests.Test: yaas.test.LanguageTest" />
+        <item itemvalue="Django tests.Test: yaas.testsTDD.WS2_BidAuctionApiTests.test_bid_successfully" />
+        <item itemvalue="Django tests.Test: yaas.testsTDD.UC6_BidAuctionTests" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ba8ca1cb-8d2a-4aa9-83db-b2cafdfc0f87" name="Default Changelist" comment="" />
+      <created>1568802958055</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1568802958055</updated>
+      <workItem from="1568802961147" duration="1463000" />
+      <workItem from="1569233128455" duration="3526000" />
+      <workItem from="1569237598625" duration="29229000" />
+      <workItem from="1569492077643" duration="148000" />
+      <workItem from="1569500465198" duration="6079000" />
+      <workItem from="1569759948814" duration="8343000" />
+      <workItem from="1569838650350" duration="18593000" />
+      <workItem from="1569911774971" duration="7269000" />
+      <workItem from="1570084038137" duration="2816000" />
+      <workItem from="1570086930474" duration="2469000" />
+      <workItem from="1570095275334" duration="3039000" />
+      <workItem from="1570115876861" duration="5151000" />
+      <workItem from="1570121109918" duration="2827000" />
+      <workItem from="1570166917912" duration="2923000" />
+      <workItem from="1570191447557" duration="849000" />
+      <workItem from="1570291068193" duration="298000" />
+      <workItem from="1570347568045" duration="50037000" />
+      <workItem from="1570546238403" duration="11086000" />
+      <workItem from="1570624939885" duration="4160000" />
+      <workItem from="1570643622398" duration="12147000" />
+      <workItem from="1570710004395" duration="20665000" />
+      <workItem from="1570781411560" duration="4758000" />
+      <workItem from="1570994953813" duration="366000" />
+      <workItem from="1571056449824" duration="11421000" />
+      <workItem from="1571122978675" duration="86000" />
+      <workItem from="1571127757034" duration="3547000" />
+      <workItem from="1571147674965" duration="5238000" />
+      <workItem from="1571217238093" duration="10032000" />
+      <workItem from="1571774019497" duration="748000" />
+      <workItem from="1571822915065" duration="4923000" />
+      <workItem from="1572205966933" duration="3899000" />
+      <workItem from="1572269800047" duration="3125000" />
+      <workItem from="1572552639711" duration="456000" />
+      <workItem from="1572553151118" duration="433000" />
+      <workItem from="1572553801349" duration="34000" />
+      <workItem from="1572554463476" duration="7725000" />
+      <workItem from="1572605465090" duration="16026000" />
+      <workItem from="1572724272740" duration="1974000" />
+      <workItem from="1572860202492" duration="70000" />
+      <workItem from="1572860308338" duration="1599000" />
+      <workItem from="1572864754525" duration="5105000" />
+      <workItem from="1572871036333" duration="7108000" />
+      <workItem from="1572891098116" duration="10547000" />
+      <workItem from="1572901942051" duration="2332000" />
+      <workItem from="1572934924543" duration="5581000" />
+      <workItem from="1572950412780" duration="3863000" />
+      <workItem from="1572961118962" duration="1949000" />
+      <workItem from="1572963164173" duration="15121000" />
+      <workItem from="1572978688599" duration="960000" />
+      <workItem from="1572983108768" duration="229000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_UC6_BidAuctionTests.coverage" NAME="Test: yaas.testsTDD.UC6_BidAuctionTests Coverage Results" MODIFIED="1572951164122" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_UC1_SignUpTests_test_sign_up_with_valid_data.coverage" NAME="Test: yaas.testsTDD.UC1_SignUpTests.test_sign_up_with_valid_data Coverage Results" MODIFIED="1569593882410" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_UC8_ResolveAuctionTests.coverage" NAME="Test: yaas.testsTDD.UC8_ResolveAuctionTests Coverage Results" MODIFIED="1572870680233" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_WS2_BidAuctionApiTests_test_bid_successfully.coverage" NAME="Test: yaas.testsTDD.WS2_BidAuctionApiTests.test_bid_successfully Coverage Results" MODIFIED="1572953658092" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_test_LanguageTest.coverage" NAME="Test: yaas.test.LanguageTest Coverage Results" MODIFIED="1572970473569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD.coverage" NAME="Test: yaas.testsTDD Coverage Results" MODIFIED="1572979640217" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_WS1_BrowseAndSearchAuctionApiTests_test_search_for_auctions_by_id.coverage" NAME="Test: yaas.testsTDD.WS1_BrowseAndSearchAuctionApiTests.test_search_for_auctions_by_id Coverage Results" MODIFIED="1571131091060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_WS2_BidAuctionApiTests_test_bid_with_invalid_data.coverage" NAME="Test: yaas.testsTDD.WS2_BidAuctionApiTests.test_bid_with_invalid_data Coverage Results" MODIFIED="1572620003564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_WS1_BrowseAndSearchAuctionApiTests.coverage" NAME="Test: yaas.testsTDD.WS1_BrowseAndSearchAuctionApiTests Coverage Results" MODIFIED="1571222248030" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_UC8_ResolveAuctionTests_test_resolve_auction_and_send_emails.coverage" NAME="Test: yaas.testsTDD.UC8_ResolveAuctionTests.test_resolve_auction_and_send_emails Coverage Results" MODIFIED="1572870493080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_testsTDD_WS2_BidAuctionApiTests.coverage" NAME="Test: yaas.testsTDD.WS2_BidAuctionApiTests Coverage Results" MODIFIED="1572620919192" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_test_LanguageTest_test_store_language.coverage" NAME="Test: yaas.test.LanguageTest.test_store_language Coverage Results" MODIFIED="1572971215777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$views.coverage" NAME="views Coverage Results" MODIFIED="1570624302841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/auction" />
+    <SUITE FILE_PATH="coverage/yaas_project_2019_Srijan619$Test__yaas_test.coverage" NAME="Test: yaas.test Coverage Results" MODIFIED="1572970805236" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  </component>
+</project>
