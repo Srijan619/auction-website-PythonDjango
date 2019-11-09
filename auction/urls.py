@@ -13,6 +13,7 @@ urlpatterns = [
     path('resolve/', views.resolve, name='resolve'),
     path('banned/', views.bannedAuctions.as_view(), name="banned"),
     path('generate/', views.generateData.as_view(), name="generate"),
+    re_path(r'^editlink/(?P<id>[0-9A-Fa-f-]+)', views.EditAuctionLink.as_view(), name='editlink'),
 
 
 

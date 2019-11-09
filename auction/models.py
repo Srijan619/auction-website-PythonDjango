@@ -1,7 +1,9 @@
+import uuid as uuid
 from django.db import models
 
 
 class Auction(models.Model):
+    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     minimum_price = models.CharField(max_length=50,default=0.0)

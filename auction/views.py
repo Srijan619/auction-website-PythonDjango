@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.shortcuts import render, get_object_or_404
@@ -69,11 +70,10 @@ class CreateAuction(View):
                 new_auction.save()
                 subject = ("Auction created")
                 message = (
-                        "Thank you for creating an auction. Below link provides to modify the auction details." + " ")
-                link = "http://127.0.0.1:8000/auction/edit/" + str(new_auction.id)
+                        "Thank you for creating an auction. Copy and paste the link provided below to edit the auction.")
+                link = "http://127.0.0.1:8000/auction/editlink/" + str(new_auction.uuid)+'/'
                 to_email = [request.user.email]
-
-                send_mail(subject, message + link, 'no-reply@yaas.com', to_email, fail_silently=False)
+                send_mail(subject, message+' '+link, 'no-reply@yaas.com', to_email, fail_silently=False)
 
                 messages.info(request, _("Auction has been created successfully, check your emails"))
                 return HttpResponseRedirect(reverse("auction:index"))
@@ -92,35 +92,43 @@ class EditAuction(View):
 
     def get(self, request, id):
         auction = Auction.objects.get(id=id)
-        if auction.hosted_by == request.user.username:
-            print(request.user.username)
-            print(auction.id)
-            form = EditAuctionForm()
-            auction.version = 1
-            return render(request, "edit_auction.html", {"form": form})
+        if auction is not None:
+            if auction.hosted_by == request.user.username:
+                print(request.user.username)
+                print(auction.id)
+                form = EditAuctionForm()
+                auction.version = 1
+                return render(request, "edit_auction.html", {"form": form})
+            else:
+                messages.info(request, "That is not your auction to edit")
+                return HttpResponseRedirect(reverse("auction:index"))
         else:
-            messages.info(request, "That is not your auction to edit")
+            messages.info(request, "No such auction")
             return HttpResponseRedirect(reverse("auction:index"))
 
     def post(self, request, id):
         auction = Auction.objects.get(id=id)
-        if auction.hosted_by == request.user.username:
-            form = EditAuctionForm(request.POST)
-            if form.is_valid():
-                cd = form.cleaned_data
-                auction.version = auction.version + 1
-                title = cd['title']
-                description = cd['description']
-                auction.description = description
-                auction.title = title
-                auction.save()
-                print(auction.version)
-                messages.info(request, _("Auction has been updated successfully"))
-                return HttpResponseRedirect(reverse("auction:index"))
+        if auction is not None:
+            if auction.hosted_by == request.user.username:
+                form = EditAuctionForm(request.POST)
+                if form.is_valid():
+                    cd = form.cleaned_data
+                    auction.version = auction.version + 1
+                    title = cd['title']
+                    description = cd['description']
+                    auction.description = description
+                    auction.title = title
+                    auction.save()
+                    print(auction.version)
+                    messages.info(request, _("Auction has been updated successfully"))
+                    return HttpResponseRedirect(reverse("auction:index"))
+                else:
+                    return render(request, "edit_auction.html", {"form": form})
             else:
-                return render(request, "edit_auction.html", {"form": form})
+                messages.info(request, _("That is not your auction"))
+                return HttpResponseRedirect(reverse("auction:index"))
         else:
-            messages.info(request, _("That is not your auction"))
+            messages.info(request, "No such auction")
             return HttpResponseRedirect(reverse("auction:index"))
 
 
@@ -418,5 +426,37 @@ class generateData(View):
                 bids.save()
 
             messages.info(request, "Random users and auctions created")
+            return HttpResponseRedirect(reverse("auction:index"))
+
+
+# sending user special link to edit the auction
+class EditAuctionLink(View):
+
+    def get(self, request, id):
+        auction = Auction.objects.get(uuid=id) # using the hash uuid stored in database to get the auction
+        form = EditAuctionForm()
+        auction.version = 1
+        return render(request, "edit_auction.html", {"form": form})
+
+
+    def post(self, request, id):
+        auction = Auction.objects.get(uuid=id)
+        if auction.hosted_by == request.user.username:
+            form = EditAuctionForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                auction.version = auction.version + 1
+                title = cd['title']
+                description = cd['description']
+                auction.description = description
+                auction.title = title
+                auction.save()
+                print(auction.version)
+                messages.info(request, _("Auction has been updated successfully"))
+                return HttpResponseRedirect(reverse("auction:index"))
+            else:
+                return render(request, "edit_auction.html", {"form": form})
+        else:
+            messages.info(request, _("That is not your auction"))
             return HttpResponseRedirect(reverse("auction:index"))
 
