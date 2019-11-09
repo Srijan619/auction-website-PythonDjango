@@ -17,6 +17,7 @@ from _datetime import datetime, timezone
 from faker import Faker
 from django.core.serializers.json import DjangoJSONEncoder
 import requests
+import random
 import json
 
 
@@ -130,6 +131,9 @@ class bid(View):
         data = response.json()
 
         # Your JSON object
+        if request.session.get('currency_code') is None:
+            request.session['currency_code']= "EUR"
+
         usd_rate = data["rates"][request.session.get('currency_code')]
 
         auction = Auction.objects.get(id=item_id)
@@ -361,31 +365,57 @@ class generateData(View):
         if form.is_valid():
             cd = form.cleaned_data
             auction_amount = cd['auction_amount']
-            for _ in range(0, auction_amount):
-                username = fake.first_name()
-                print(username)
-                email = fake.email()
-                print(email)
-                password = fake.last_name()
-                print(password)
-                title = fake.sentence(nb_words=4)
+            list_username =[]
+            new_price=[]
+            hosted=[]
+            auction_id=[]
 
-                description = fake.sentence(nb_words=10)
-                deadline_date = fake.date_time_between(start_date="+4d", end_date="+30d", tzinfo=None)
-                print(deadline_date)
-                minimum_price = fake.year()
-                print(minimum_price)
-                hosted_by = username
+            for _ in range(0, auction_amount):
+
+                ## Creating random user details
+
+                username = fake.first_name()
+                list_username.append(username)
+
+
+                email = fake.email()
+                password = fake.last_name()
                 user = User.objects.create_user(username=username, password=password, email=email)
-                language=UserLanguage.objects.create(language="en")
                 user.save()
+
+                ## creating language session default data
+
+                language = UserLanguage.objects.create(language="en", user_id=user.id)
                 language.save()
 
-                new_auction = Auction.objects.create(title=title, description=description,
-                                                     minimum_price=minimum_price,
-                                                     deadline_date=deadline_date, hosted_by=hosted_by)
+                ## Creating random auctions
 
+                title = fake.sentence(nb_words=4)
+                description = fake.sentence(nb_words=10)
+                deadline_date = fake.date_time_between(start_date="+4d", end_date="+30d", tzinfo=None)
+                minimum_price =random.randrange(1,1000)
+                hosted_by = username
+                new_auction = Auction.objects.create(title=title, description=description,
+                 minimum_price=minimum_price,
+                 deadline_date=deadline_date, hosted_by=hosted_by)
                 new_auction.save()
+
+
+                ## Creating random bids for each auctions
+
+                bid_price=random.randrange(minimum_price,1500)
+                new_price.append(bid_price)
+                hosted.append(username)
+                auction_id.append(new_auction.id)
+
+
+            # Reversing the list so that hosted by and new bidder wouldnt match
+            list_username.reverse()
+            #Creating a new random bid
+            for i in range(0,auction_amount):
+                bids = Bidding.objects.create(new_price=new_price[i], hosted_by=hosted[i],
+                bidder=list_username[i], auction_id=auction_id[i])
+                bids.save()
 
             messages.info(request, "Random users and auctions created")
             return HttpResponseRedirect(reverse("auction:index"))
