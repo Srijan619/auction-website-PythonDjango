@@ -22,7 +22,7 @@
                 <tr >
                     <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.title }}</th>
                     <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.description }}</th>
-                    <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.minimum_price }}</th>
+                    <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.minimum_price }} {{ request.session.currency_code }}</th>
                     <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.created_date }}</th>
                     <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.deadline_date }}</th>
                     <th style="font-weight: lighter;border-bottom-style: solid">{{ auction.status }}</th>

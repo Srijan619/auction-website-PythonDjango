@@ -36,7 +36,8 @@ class SignUp(View):
                 messages.info(request, "This email has been taken")
                 return render(request, "sign_up.html")
             else:
-                print(request.session.get('ln'))
+                if request.session.get('ln') is None:
+                    request.session['ln']="en"
                 user = User.objects.create_user(username=username, password=password, email=email)
                 language=UserLanguage.objects.create(language=request.session.get('ln'), user=user)
                 language.save()

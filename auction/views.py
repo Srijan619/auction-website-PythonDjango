@@ -2,24 +2,22 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from .models import Auction, Bidding
 from user.models import UserLanguage
 from django.urls import reverse
 from django.utils import translation
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .forms import CreateAuctionForm, EditAuctionForm, Auction, BiddingForm, GenerateData
+from django.http import  HttpResponseRedirect, JsonResponse
+from .forms import CreateAuctionForm, EditAuctionForm, BiddingForm, GenerateData
 from django.utils.translation import gettext as _
 from _datetime import datetime, timezone
 from faker import Faker
-from django.core.serializers.json import DjangoJSONEncoder
 import requests
 import random
-import json
+
 
 
 url = 'https://api.exchangerate-api.com/v4/latest/EUR'
@@ -153,6 +151,17 @@ class bid(View):
         new_pris = round(float(auction.minimum_price) * usd_rate, 2)
         auction.minimum_price = new_pris
 
+
+        # Converting all biddings price
+        if bidding_all is not None:
+            for item in bidding_all:
+              item.new_price=round(float(item.new_price) * usd_rate, 2)
+
+        # Converting the current highest bid
+        if biddings is not None:
+            biddings.new_price=round(float(biddings.new_price) * usd_rate, 2)
+
+
         delta = auction.deadline_date - datetime.now(timezone.utc)
 
         current_version=auction.version
@@ -271,6 +280,7 @@ def ban(request, item_id):
 
 
 class bannedAuctions(View):
+    # displaying lists of banned auctions
     def get(self, request):
         auctions = Auction.objects.filter(status="Banned").order_by('-created_date')
         return render(request, "banned_auctions.html", {"auctions": auctions})
@@ -432,31 +442,27 @@ class generateData(View):
 # sending user special link to edit the auction
 class EditAuctionLink(View):
 
-    def get(self, request, id):
-        auction = Auction.objects.get(uuid=id) # using the hash uuid stored in database to get the auction
+    def get(self, request, uuid):
+        auction = Auction.objects.get(uuid=uuid) # using the hash uuid stored in database to get the auction
         form = EditAuctionForm()
         auction.version = 1
         return render(request, "edit_auction.html", {"form": form})
 
 
-    def post(self, request, id):
-        auction = Auction.objects.get(uuid=id)
-        if auction.hosted_by == request.user.username:
-            form = EditAuctionForm(request.POST)
-            if form.is_valid():
-                cd = form.cleaned_data
-                auction.version = auction.version + 1
-                title = cd['title']
-                description = cd['description']
-                auction.description = description
-                auction.title = title
-                auction.save()
-                print(auction.version)
-                messages.info(request, _("Auction has been updated successfully"))
-                return HttpResponseRedirect(reverse("auction:index"))
-            else:
-                return render(request, "edit_auction.html", {"form": form})
-        else:
-            messages.info(request, _("That is not your auction"))
-            return HttpResponseRedirect(reverse("auction:index"))
+    def post(self, request, uuid):
+        auction = Auction.objects.get(uuid=uuid)
 
+        form = EditAuctionForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            auction.version = auction.version + 1
+            title = cd['title']
+            description = cd['description']
+            auction.description = description
+            auction.title = title
+            auction.save()
+            print(auction.version)
+            messages.info(request, "Auction has been updated successfully")
+            return HttpResponseRedirect(reverse("auction:index"))
+        else:
+            return render(request, "edit_auction.html", {"form": form})

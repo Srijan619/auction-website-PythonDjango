@@ -88,7 +88,7 @@
                             </li>
                             <hr>
                             <li>
-                                <p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{ auction.minimum_price }}
+                                <p style="font-weight: bold;display: inline-block">{% trans 'Start Price:' %}</p> {{ auction.minimum_price }} {{ request.session.currency_code }}
                             </li>
                             <hr>
                             <li>

@@ -53,7 +53,7 @@
                 </tr>
                 <tr>
                     <th>Start Price:</th>
-                    <th>{{ auction.minimum_price }}</th>
+                    <th>{{ auction.minimum_price }} {{ request.session.currency_code }}</th>
                 </tr>
                 <tr>
                     <th>Hosted By:</th>
@@ -61,7 +61,7 @@
                 </tr>
                 <tr>
                     <th>Current Highest Bid:</th>
-                    <th>{{ biddings.new_price }}</th>
+                    <th>{{ biddings.new_price }} {{ request.session.currency_code }}</th>
                 </tr>
                 <tr>
                     <th>{{ form }}</th>
@@ -87,7 +87,7 @@
 
             <tr>
                 <th style="font-weight: lighter">{{ bidding.bidder }}</th>
-                <th>{{ bidding.new_price }}</th>
+                <th>{{ bidding.new_price }} {{ request.session.currency_code }}</th>
                 <th>{{ bidding.bid_time }}</th>
             </tr>
  {% endfor %}
