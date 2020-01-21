@@ -1,84 +1,61 @@
-# 2019-web-services-project-skeleton
+# YAAS- Yet Another Auction System
 
-This is a tutorial how to setup and use the framework.
+## Implemented Functionalities
 
-## Packages installation
+- [x] UC1: Create user
+- [x] UC2: Edit user
+- [x] UC3: Create auction
+- [x] UC4: Edit auction's description
+- [x] UC5: Browse & Search
+- [x] UC6: Bid
+- [x] UC7: Ban auction
+- [x] UC8: Resolve auction
+- [x] UC9: Language switching
+- [x] UC10: Concurrency
+- [x] UC11: Currency exchange
+- [x] WS1: Browse & Search API
+- [x] WS2: Bid API
+- [x] REQ9.3: Store language preference  
+- [x] REQ3.5: Send seller auction link
+- [x] TREQ4.1.1 Test Implemented for REQ 9
+- [x] TREQ4.1.2 Test Implemented for REQ 3
+- [x] TREQ4.2: Implemented random data generation program  
+- [x] TREQ4.1.3: Test Implemented for REQ 10
 
-First thing first, you need to install all packages in the `requirements.txt` file. 
-They should be automatically detected and installed by Python Interpreter.
+## Browser Used: ***Chrome for Windows***
 
-## Initializing the database
 
-Before running the project, you need to initialize/update the database (i.e., `db.sqlite3`). Run the following command
-in your project directory:
-```
-$ ./manage.py migrate
-```
-Read more django migrations [here](https://docs.djangoproject.com/en/2.2/topics/migrations/)
+## List of python packages
 
-## Settings
+* jango 2.2.6
+* Django 2.2.5
+* requests 2.22.0
+* djangorestframework 3.10.2
+* freezegun 0.3.12
+* Faker	2.0.3
+* certifi	2019.9.11
+* chardet	3.0.4
+* django-user-language-middleware	0.0.3
+* djangorestframework	3.10.2
+* freezegun	0.3.12
+* idna	2.8
+* manage.py	0.2.10
+* pip	19.3.1
+* python-dateutil	2.8.0
+* python-gettext
+* pytz	2019.3
+* requests	2.22.0
+* setuptools	41.2.0
+* six	1.12.0
+* sqlparse	0.3.0
+* text-unidecode
+* urllib3	1.25.6
+* wheel	0.33.6
 
-There are some attributes in `settings.py` file that you need to pay attention.
+##### * Some of the packages were used for the test purpose
 
-- `SECRET_KEY`: It should be unique and kept secret if you plan to deploy your web application. You can generate a new one 
-for your project. You can generate a key by using an online generator like this 
-[Djecrety](https://djecrety.ir/); or by the below code in Python console:
-```
->>> import random
->>> ''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50))
-```
+### Bugs and crashes
 
-- `INSTALLED_APPS`: A list of strings of used packages and apps in this project. It is split into 
-`PREREQ_APPS` and `PROJECT_APPS` for clarity reasons. The former consists of Django packages and 
-the latter contains project user-defined apps. One can freely add more packages or apps 
-if needed in their appropriate locations.
+* Random data generation works completely fine for the first time with all unique usernames but on the second generation it creates some similar usernames which doesn't matches the unique_username constraints.
+* Additional test is included in test.py
 
-- `AUTH_PASSWORD_VALIDATORS`: A list of strings for types of password validators. 
-In the beginning, it is empty for the sake of testing.
-
-## Structure
-
-The project comes with two apps, auction and user. All required URLs are provided in `urls.py` 
-files of the project and apps. The routes of `urls` can be changed if wanted but the `name` and 
-`namespace` are not allowed to change. The `views.py` files have empty functions that are ready 
-to be implemented. You are open to create new apps if you want, just make sure followwing
-the structure.
-
-## Tests
-
-In the inner Yaas directory, there is `testsTDD.py` containing all the tests. Students are not 
-allowed to make any change to this file. If you want to create your own tests, you should 
-create a file named `test*.py` and write tests in there because Python 3 automatically discover 
-tests in any file with that name when running. There are several ways to run the tests from 
-PyCharm or commands:
-
-- PyCharm:
-    * Choose the test file and click the Run button on the Toolbar.
-    * Press `Ctrl-Alt-R` (for Window).
-    * Right click on the file and then Run tests.
-    * Click a run button at the beginning of a test case or a test to run them specifically.
-- `manage.py` commands:
-```
-# Run all the tests
-$ ./manage.py test
-
-# Run all the tests found within the 'auction' package
-$ ./manage.py test auction
-
-# Run all the tests in the yaas.testsTDD module
-$ ./manage.py test yaas.testsTDD
-
-# Run just one test case
-$ ./manage.py test yaas.testsTDD.SignUpTests
-
-# Run just one test method
-$ ./manage.py test yaas.testsTDD.SignUpTests.test_sign_up_with_valid_data
-```
-
-## Automated grading
-
-During the implementation, students can run the tests frequently to check what features they 
-have done and how many points they currently have. Each use case from the requirements is a 
-test case, they will give a message after they are run, and only when all tests of a test case 
-pass, students can receive points granted by it. The result message should be something similar 
-to this: `UC1 passed, 1 point, Current points: 1/30`.
