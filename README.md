@@ -1,5 +1,7 @@
 # YAAS- Yet Another Auction System
 
+### Landing page: http://chapssrijan.pythonanywhere.com/auction/
+
 ## Implemented Functionalities
 
 - [x] UC1: Create user
@@ -58,4 +60,5 @@
 
 * Random data generation works completely fine for the first time with all unique usernames but on the second generation it creates some similar usernames which doesn't matches the unique_username constraints.
 * Additional test is included in test.py
+* Sending email is for test purpose 'EMAIL_BACKEND' is used
 
