@@ -1,6 +1,6 @@
 # YAAS- Yet Another Auction System
 
-### Landing page: http://chapssrijan.pythonanywhere.com/auction/
+
 
 ## Implemented Functionalities
 
