@@ -17,7 +17,7 @@ lazy-object-proxy==1.4.2
 manage.py==0.2.10
 mccabe==0.6.1	
 patterns==0.3	
-pip==19.2.3	
+pip==21.1	
 psycopg2==2.8.3	
 pylint==2.4.2	
 python-dateutil==2.8.0	
